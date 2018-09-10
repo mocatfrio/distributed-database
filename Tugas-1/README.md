@@ -6,10 +6,10 @@
     - [1. Menyiapkan Server](#1-menyiapkan-server)
       - [1a. Membuat Server Master](#1a-membuat-server-master)
       - [1b. Membuat Server Slave](#1b-membuat-server-slave)
-  - [2. Konfigurasi Replikasi MySQL](#2-konfigurasi-replikasi-mysql)
-    - [2a. Konfigurasi Master Node](#2a-konfigurasi-master-node)
-    - [2b. Konfigurasi Slave Node](#2b-konfigurasi-slave-node)
-    - [4. Promote slave as master](#4-promote-slave-as-master)
+    - [2. Konfigurasi Replikasi MySQL](#2-konfigurasi-replikasi-mysql)
+      - [2a. Konfigurasi Master Node](#2a-konfigurasi-master-node)
+      - [2b. Konfigurasi Slave Node](#2b-konfigurasi-slave-node)
+    - [4. Promote Slave As Master](#4-promote-slave-as-master)
       - [4a. Pada Server Master Lama](#4a-pada-server-master-lama)
       - [4b. Pada Server Master Baru](#4b-pada-server-master-baru)
       - [4c. Pada Server Slave](#4c-pada-server-slave)
@@ -113,8 +113,8 @@ Yang harus dilakukan adalah:
     > Keterangan: "daus" adalah nama user yang dibuat.
 9. Menambahkan user baru tersebut ke dalam **sudoer** dengan menjalankan command `sudo usermod -a -G sudo daus`.
 
-## 2. Konfigurasi Replikasi MySQL
-### 2a. Konfigurasi Master Node
+### 2. Konfigurasi Replikasi MySQL
+#### 2a. Konfigurasi Master Node
 1. Membuka file konfigurasi MySQL.
     ```shell
     sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
@@ -194,7 +194,7 @@ Yang harus dilakukan adalah:
     QUIT;
     ```
 
-### 2b. Konfigurasi Slave Node
+#### 2b. Konfigurasi Slave Node
 1. Masuk ke dalam MySQL, membuat database baru, kemudian keluar.
     ```mysql
     mysql -u root -p
@@ -251,7 +251,7 @@ Yang harus dilakukan adalah:
     ```
     ![Screenshot 1](/Tugas-1/img/ss3.png)
 
-### 4. Promote slave as master
+### 4. Promote Slave As Master
 #### 4a. Pada Server Master Lama
 * Koneksi pada server master harus terputus terlebih dahulu, salah satu caranya adalah dengan mematikan layanan mysql pada server master.
 * Pada server slave, jalankan perintah `SHOW SLAVE STATUS\G` untuk melihat status server slave:

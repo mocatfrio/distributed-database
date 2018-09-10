@@ -15,7 +15,7 @@
       - [4c. Pada Server Slave](#4c-pada-server-slave)
 
 ## Deskripsi Tugas
-Tugas ini menerapkan konsep yang ada di Chapter 2 (RDBMS & Network Communication.
+Tugas ini menerapkan konsep yang ada di Chapter 2 (RDBMS & Network Communication).
 
 Yang harus dilakukan adalah:
 1. Setup MySQL replication (1 master, n slave)

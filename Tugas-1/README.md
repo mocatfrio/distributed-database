@@ -9,8 +9,8 @@
     - [2. Konfigurasi Replikasi MySQL](#2-konfigurasi-replikasi-mysql)
       - [2a. Konfigurasi Master Node](#2a-konfigurasi-master-node)
       - [2b. Konfigurasi Slave Node](#2b-konfigurasi-slave-node)
-    - [3. Pengujian Replikasi MySQL](#3-pengujian-replikasi-mysql)
-    - [4. Promote slave as master](#4-promote-slave-as-master)
+    - [3. Pengujian Proses Replikasi MySQL](#3-pengujian-proses-replikasi-mysql)
+    - [4. Promote Slave As Master](#4-promote-slave-as-master)
       - [4a. Pada Server Master Lama](#4a-pada-server-master-lama)
       - [4b. Pada Server Master Baru](#4b-pada-server-master-baru)
       - [4c. Pada Server Slave](#4c-pada-server-slave)
@@ -58,6 +58,8 @@ Yang harus dilakukan adalah:
   ![Gambar Arsitektur Server](/Tugas-1/img/arsitektur-server.jpg)
   
 #### 1a. Membuat Server Master
+Master dibuat menggunakan **Ansible** dengan hanya melakukan clone dari Virtual Machine di Proxmox yang sudah ada. 
+
 #### 1b. Membuat Server Slave
 > Prasyarat: Sudah menginstall **VirtualBox** dan **Vagrant**
 
@@ -253,32 +255,32 @@ Yang harus dilakukan adalah:
     ![Screenshot 1](/Tugas-1/img/ss3.png)
 
 ### 3. Pengujian Proses Replikasi MySQL
-  1. Untuk menguji replikasi sudah berjalan dapat diuji dengan menjalankan query pada node master. Contohnya menambah *record data* pada salah satu *table* dalam database.
-  2. Pada node master, masuk ke database **employees** pada MySQL database
-      ```bash
-      mysql -uroot -p
-      ***insert password***
-      
-      USE employees;
-      SELECT * FROM departments;
-      ```
-      ![Before Insert](/bdt-2018/Tugas-1/img/ss3b.png)
+1. Untuk menguji proses replikasi yang sudah berjalan, dapat dilakukan dengan menjalankan query pada node Master. Contohnya menambah *record data* pada salah satu *table* dalam database.
+2. Masuk ke dalam database **employees** pada MySQL database pada node Master.
+    ```mysql
+    mysql -uroot -p
+    ***insert password***
+    
+    USE employees;
+    SELECT * FROM departments;
+    ```
+    ![Before Insert](/Tugas-1/img/ss3b.png)
 
-  3. Tambahkan *record data* pada table **departments**
-      ```bash
-      INSERT INTO departments VALUES ('d010', 'Pembantu Umum');
-      SELECT * from departments;
-      ```
-      ![After Insert](/bdt-2018/Tugas-1/img/ss3c.png)
+3. Menambahkan *record data* pada table **departments** pada node Master.
+    ```mysql
+    INSERT INTO departments VALUES ('d010', 'Pembantu Umum');
+    SELECT * from departments;
+    ```
+    ![After Insert](/Tugas-1/img/ss3c.png)
 
-  4. Cek database pada slave, apakah isi table pada database node slave, sesuai dengan database pada node master.
-    ![Slave Replicated](/bdt-2018/Tugas-1/img/ss3d.png)
+4. Mengecek apakah isi database pada semua node Slave sama dengan isi database pada node Master. Jika sama, maka proses replikasi MySQL sudah berjalan dengan baik.
+    ![Slave Replicated](/Tugas-1/img/ss3d.png)
 
-### 4. Promote slave as master
+### 4. Promote Slave As Master
 #### 4a. Pada Server Master Lama
 * Koneksi pada server master harus terputus terlebih dahulu, salah satu caranya adalah dengan mematikan layanan mysql pada server master.
-* Pada server slave, jalankan perintah `SHOW SLAVE STATUS\G` untuk melihat status server slave:
-* Jika pada kolom *Slave_SQL_Running_State* menampilkan *“Slave has read all relay log; waiting for more updates”*, maka server slave dapat di*promote* menjadi server master dengan cara me*reset* calon server master seperti berikut:
+* Pada server Slave, menjalankan perintah `SHOW SLAVE STATUS\G` untuk melihat status server slave:
+* Jika pada kolom **Slave_SQL_Running_State** menampilkan _“Slave has read all relay log; waiting for more updates”_, maka server slave dapat di*promote* menjadi server master dengan cara me*reset* calon server master seperti berikut:
   ```mysql
   mysql> STOP SLAVE;
   Query OK, 0 rows affected (0.01 sec)
@@ -286,13 +288,13 @@ Yang harus dilakukan adalah:
   mysql> RESET SLAVE;
   Query OK, 0 rows affected (0.01 sec)
   ```
-  ![Reset Slave](img/ss4a.png)
+  ![Reset Slave](/Tugas-1/img/ss4a.png)
 #### 4b. Pada Server Master Baru
-* Buka pengaturan mysql pada server master yang baru dengan cara:
+* Membuka pengaturan MySQL pada server Master yang baru dengan cara:
   ```shell
   sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
   ```
-* Lakukan perubahan pada kolom ```binlog_do_db``` menjadi `sakila`. Setelah itu lakukan simpan dan *refresh* pada MySQL dengan cara:
+* Melakukan perubahan pada kolom ```binlog_do_db``` menjadi `sakila`. Setelah itu lakukan simpan dan *refresh* pada MySQL dengan cara:
   ```shell
   sudo service mysql restart
   ```
@@ -310,40 +312,40 @@ Yang harus dilakukan adalah:
   ```mysql
   SHOW MASTER STATUS;
   ```
-  ![Gambar Status Master](img/status-master-baru.png)
+  ![Gambar Status Master](/Tugas-1/img/status-master-baru.png)
 
-* Ekspor *database* dengan menggunakan perintah berikut
+* Mengekspor *database* dengan menggunakan perintah berikut
   ```shell
   mysqldump -u root -p --opt sakila > sakila.sql
   ```
-* Buka kembali *database* yang tadi telah dikunci pada server master yang baru dengan cara:
+* Membuka kembali *database* yang tadi telah dikunci pada server master yang baru dengan cara:
   ```mysql
   UNLOCK TABLES;
   QUIT;
   ```
 #### 4c. Pada Server Slave
-* Buat *database* baru bernama sakila pada server slave:
+* Membuat *database* baru bernama `sakila` pada server slave:
   ```mysql
   CREATE DATABASE sakila;
   EXIT;
   ```
-* Impor *database* yang telah diekspor dan dikirim dari server master
+* Mengimpor *database* yang telah diekspor dan dikirim dari server master
   ```shell
   mysql -u root -p sakila < sakila.sql
   ```
-* Buka pengaturan mysql pada server slave dengan cara:
+* Membuka pengaturan mysql pada server slave dengan cara:
   ```shell
   sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
   ```
-* Lakukan perubahan pada kolom `binlog_do_db` menjadi `sakila`. Setelah itu lakukan simpan dan *refresh* pada MySQL dengan cara:
+* Melakukan perubahan pada kolom `binlog_do_db` menjadi `sakila`. Setelah itu lakukan simpan dan *refresh* pada MySQL dengan cara:
   ```shell
   sudo service mysql restart
   ```
-* Buka kembali MySQL shell kembali dan lakukan perubahan konfigurasi server master yang terdapat pada MySQL server slave dengan cara:
+* Membuka kembali MySQL shell kembali dan lakukan perubahan konfigurasi server master yang terdapat pada MySQL server slave dengan cara:
   ```mysql
   CHANGE MASTER TO MASTER_HOST='10.151.36.196',MASTER_USER='slave1', MASTER_PASSWORD='kucinglucu', MASTER_LOG_FILE='mysql-bin.000001', MASTER_LOG_POS=  107;
   ```
-* Aktifkan server slave:
+* Mengaktifkan server slave:
   ```mysql
   START SLAVE;
   ```

@@ -6,14 +6,14 @@
     - [1. Menyiapkan Server](#1-menyiapkan-server)
       - [1a. Membuat Server Master](#1a-membuat-server-master)
       - [1b. Membuat Server Slave](#1b-membuat-server-slave)
-  - [2. Konfigurasi Replikasi MySQL](#2-konfigurasi-replikasi-mysql)
-    - [2a. Konfigurasi Master Node](#2a-konfigurasi-master-node)
-    - [2b. Konfigurasi Slave Node](#2b-konfigurasi-slave-node)
-  - [3. Pengujian Replikasi MySQL]
-  - [4. Promote slave as master](#4-promote-slave-as-master)
-    - [4a. Pada Server Master Lama](#4a-pada-server-master-lama)
-    - [4b. Pada Server Master Baru](#4b-pada-server-master-baru)
-    - [4c. Pada Server Slave](#4c-pada-server-slave)
+    - [2. Konfigurasi Replikasi MySQL](#2-konfigurasi-replikasi-mysql)
+      - [2a. Konfigurasi Master Node](#2a-konfigurasi-master-node)
+      - [2b. Konfigurasi Slave Node](#2b-konfigurasi-slave-node)
+    - [3. Pengujian Replikasi MySQL](#3-pengujian-replikasi-mysql)
+    - [4. Promote slave as master](#4-promote-slave-as-master)
+      - [4a. Pada Server Master Lama](#4a-pada-server-master-lama)
+      - [4b. Pada Server Master Baru](#4b-pada-server-master-baru)
+      - [4c. Pada Server Slave](#4c-pada-server-slave)
 
 ## Deskripsi Tugas
 Tugas ini menerapkan konsep yang ada di Chapter 2 (RDBMS & Network Communication.
@@ -114,8 +114,8 @@ Yang harus dilakukan adalah:
     > Keterangan: "daus" adalah nama user yang dibuat.
 9. Menambahkan user baru tersebut ke dalam **sudoer** dengan menjalankan command `sudo usermod -a -G sudo daus`.
 
-## 2. Konfigurasi Replikasi MySQL
-### 2a. Konfigurasi Master Node
+### 2. Konfigurasi Replikasi MySQL
+#### 2a. Konfigurasi Master Node
 1. Membuka file konfigurasi MySQL.
     ```shell
     sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
@@ -195,7 +195,7 @@ Yang harus dilakukan adalah:
     QUIT;
     ```
 
-### 2b. Konfigurasi Slave Node
+#### 2b. Konfigurasi Slave Node
 1. Masuk ke dalam MySQL, membuat database baru, kemudian keluar.
     ```mysql
     mysql -u root -p
@@ -251,11 +251,6 @@ Yang harus dilakukan adalah:
     SHOW SLAVE STATUS\G
     ```
     ![Screenshot 1](/Tugas-1/img/ss3.png)
-
-    - [4. Promote slave as master](#4-promote-slave-as-master)
-      - [4a. Pada Server Master Lama](#4a-pada-server-master-lama)
-      - [4b. Pada Server Master Baru](#4b-pada-server-master-baru)
-      - [4c. Pada Server Slave](#4c-pada-server-slave)
 
 ### 3. Pengujian Proses Replikasi MySQL
   1. Untuk menguji replikasi sudah berjalan dapat diuji dengan menjalankan query pada node master. Contohnya menambah *record data* pada salah satu *table* dalam database.

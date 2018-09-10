@@ -9,6 +9,10 @@
   - [2. Konfigurasi Replikasi MySQL](#2-konfigurasi-replikasi-mysql)
     - [2a. Konfigurasi Master Node](#2a-konfigurasi-master-node)
     - [2b. Konfigurasi Slave Node](#2b-konfigurasi-slave-node)
+    - [4. Promote slave as master](#4-promote-slave-as-master)
+      - [4a. Pada Server Master Lama](#4a-pada-server-master-lama)
+      - [4b. Pada Server Master Baru](#4b-pada-server-master-baru)
+      - [4c. Pada Server Slave](#4c-pada-server-slave)
 
 ## Deskripsi Tugas
 Tugas ini menerapkan konsep yang ada di Chapter 2 (RDBMS & Network Communication.
@@ -34,7 +38,7 @@ Yang harus dilakukan adalah:
 * Semua server menggunakan sistem operasi **Ubuntu 16.08**.
 * Semua server diinstall mysql dengan menjalankan command:
 
-  ```bash
+  ```shell
   sudo apt-get install mysql-server mysql-client​
   ``` 
 * Alamat IP server yang dibuat:
@@ -57,17 +61,17 @@ Yang harus dilakukan adalah:
 > Prasyarat: Sudah menginstall **VirtualBox** dan **Vagrant**
 
 1. Membuat folder baru, kemudian pindah ke dalam folder tersebut.
-    ```bash
+    ```shell
     mkdir bdt-2018
     cd bdt-2018
     ```
 2. Inisialisasi vagrant.
-    ```bash
+    ```shell
     Vagrant init
     ```
     Setelah menjalankan perintah tersebut akan otomatis membuat file baru bernama **Vagrantfile**.
 3. Mengedit isi **Vagrantfile** menjadi:
-    ```bash
+    ```shell
     Vagrant.configure("2") do |config|
       config.vm.box = "ubuntu/xenial64"
 
@@ -89,8 +93,8 @@ Yang harus dilakukan adalah:
     * Menambahkan **vb.cpus** sebanyak 2
     * Menambahkan `config.vm.provision "shell", path: "provision.sh"` di paling akhir untuk menambahkan file provision yang akan dibahas pada langkah ke-4.
 4. Membuat file **provision.sh** dengan menjalankan command `nano provision.sh` dan isi dengan:
-    ```bash
-    #!/usr/bin/env bash
+    ```shell
+    #!/usr/bin/env shell
     apt-get update
 
     # install mysql
@@ -112,11 +116,11 @@ Yang harus dilakukan adalah:
 ## 2. Konfigurasi Replikasi MySQL
 ### 2a. Konfigurasi Master Node
 1. Membuka file konfigurasi MySQL.
-    ```bash
+    ```shell
     sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
     ```
 2. Mengubah dan menambahkan konfigurasi berikut pada Master node.
-    ```bash
+    ```shell
     bind-address            = 0.0.0.0
     
     server-id               = 1
@@ -133,44 +137,119 @@ Yang harus dilakukan adalah:
     * Menambahkan **binlog_do_db** untuk mendefinisikan nama database yang akan direplikasi.
 
 3. Me-restart MySQL.
-    ```bash
+    ```shell
     sudo service mysql restart
     ```
 4. Masuk ke dalam MySQL dengan username "root" dan password "kucinglucu".
-    ```bash
+    ```shell
     mysql -u root -p
+    ***insert password***
     ```
-5. Memberikan privilege (hak istimewa) kepada Slave untuk malakukan replikasi dan mengatur password-nya.
-    ```bash
+5. Memberikan privilege (hak istimewa) kepada Slave untuk melakukan replikasi dan mengatur password-nya.
+    ```shell
     GRANT REPLICATION SLAVE ON *.* TO 'slave_user'@'%' IDENTIFIED BY 'kucinglucu';
     ```
     > Keterangan: "kucinglucu" adalah password yang diatur.
     
     Kemudian dilanjutkan dengan 
-    ```bash 
+    ```mysql
     FLUSH PRIVILEGES;
     ```
 6. Membuat database baru bernama **employees**.
-    ```bash
+    ```mysql
     CREATE DATABASE employees;
     ```
-    Kemudian, masuk ke dalam database tersebut.
-    ```bash
+    Masuk ke dalam database tersebut.
+    ```mysql
     USE employees;
     ```
+    > Database di download dari link berikut https://dev.mysql.com/doc/employee/en/
 8. Mengunci database untuk mencegah perubahan yang masuk.
-    ```bash
+    ```mysql
     FLUSH TABLES WITH READ LOCK;
     ```
 9. Melihat status master.
-    ```bash
+    ```mysql
     SHOW MASTER STATUS;
     ```
     Maka akan muncul tabel seperti di bawah ini:
-    
+    ```mysql
+    mysql> SHOW MASTER STATUS;
+    +------------------+----------+--------------+------------------+-------------------+
+    | File             | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
+    +------------------+----------+--------------+------------------+-------------------+
+    | mysql-bin.000002 |      154 | employees    |                  |                   |
+    +------------------+----------+--------------+------------------+-------------------+
+    1 row in set (0.00 sec)
+    ```
+    > File dan Position wajib diingat-ingat untuk melakukan konfigurasi Slave nantinya
 
+10. Membuka window terminal baru dan mengekspor database menggunakan **mysqldump**.
+    ```shell
+    mysqldump -u root -p --opt employees > employees.sql
+    ```
+11. Kembali ke window mysql yang sebelumnya dan membuka kunci database supaya database bisa menerima perubahan kembali.
+    ```mysql
+    UNLOCK TABLES;
+    QUIT;
+    ```
 
 ### 2b. Konfigurasi Slave Node
+1. Masuk ke dalam MySQL, membuat database baru, kemudian keluar.
+    ```mysql
+    mysql -u root -p
+    ***insert password***
+
+    CREATE DATABASE employees;
+    EXIT;
+    ```
+2. Mengimpor database yang telah diekspor dari Master.
+    ```mysql
+    mysql -u root -p employees < /vagrant_data/employees.sql
+    ```
+3. Membuka file konfigurasi MySQL.
+    ```shell
+    sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+    ```
+4. Mengubah dan menambahkan konfigurasi berikut pada Slave node.
+    ```shell
+    bind-address            = 0.0.0.0
+    
+    server-id               = 5
+    relay-log               = /var/log/mysql/mysql-relay-bin.log
+    log_bin                 = /var/log/mysql/mysql-bin.log
+    binlog_do_db            = employees
+    ```
+    ![Screenshot 2](/Tugas-1/img/ss2.png)
+
+    Keterangan:
+    * **bind-address** diubah menjadi 0.0.0.0 pada semua host.
+    * **server-id** diuncomment dan diberikan angka yang berbeda pada semua node server.
+    * Menambahkan **log_bin** dan **relay-log**.
+    * Menambahkan **binlog_do_db** untuk mendefinisikan nama database yang akan direplikasi.
+
+4. Me-restart MySQL.
+    ```shell
+    sudo service mysql restart
+    ```
+6. Masuk ke dalam MySQL dan mendefinisikan parameter yang digunakan oleh server Slave agar bisa terhubung ke server Master.
+    ```mysql
+    CHANGE MASTER TO MASTER_HOST='10.151.36.210', MASTER_USER='slave1', MASTER_PASSWORD='kucinglucu', MASTER_LOG_FILE='mysql-bin.000002', MASTER_LOG_POS=154;
+    ```
+    Keterangan:
+    * **MASTER_HOST** adalah IP host server Master yang telah disiapkan.
+    * **MASTER_USER** adalah user MySQL yang telah diberikan privilege untuk mereplikasi data oleh server Master.
+    * **MASTER_PASSWORD** adalah password yang telah di set.
+    * **MASTER_LOG_FILE** dan **MASTER_LOG_POS** didapatkan dengan menjalankan `SHOW MASTER STATUS;` pada server master.
+7. Mengaktifkan server Slave.
+    ```mysql
+    START SLAVE;
+    ```
+8. Melihat detail replikasi Slave.
+    ```mysql
+    SHOW SLAVE STATUS\G
+    ```
+    ![Screenshot 1](/Tugas-1/img/ss3.png)
 
 ### 4. Promote slave as master
 #### 4a. Pada Server Master Lama

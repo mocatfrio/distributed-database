@@ -273,7 +273,7 @@ Master dibuat menggunakan **Ansible** dengan hanya melakukan clone dari Virtual 
     ```
     ![After Insert](/Tugas-1/img/ss3c.png)
 
-4. Mengecek apakah isi database pada semua node Slave sama dengan isi database pada node Master. Jika sama, maka proses replikasi MySQL sudah berjalan dengan baik.
+4. Mengecek apakah isi database pada semua node Slave sama dengan isi database pada node Master. Jika isi database sama, maka proses replikasi MySQL sudah berjalan dengan baik.
     ![Slave Replicated](/Tugas-1/img/ss3d.png)
 
 ### 4. Promote Slave As Master
@@ -298,7 +298,7 @@ Master dibuat menggunakan **Ansible** dengan hanya melakukan clone dari Virtual 
   ```shell
   sudo service mysql restart
   ```
-* Buka MySQL shell pada server master yang baru. Jika *user* `slave1` tidak ada pada server master yang baru, maka lakukan:
+* Membuka MySQL shell pada server master yang baru. Jika *user* `slave1` tidak ada pada server master yang baru, maka lakukan:
   ```mysql
   GRANT REPLICATION SLAVE ON *.* TO 'slave1'@'%' IDENTIFIED BY 'kucinglucu';
   FLUSH PRIVILEGES;

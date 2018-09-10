@@ -1,5 +1,15 @@
 # Replikasi Pada MySQL
 
+- [Replikasi Pada MySQL](#replikasi-pada-mysql)
+  - [Deskripsi Tugas](#deskripsi-tugas)
+  - [Dokumentasi Pengerjaan](#dokumentasi-pengerjaan)
+    - [1. Menyiapkan Server](#1-menyiapkan-server)
+      - [1a. Membuat Server Master](#1a-membuat-server-master)
+      - [1b. Membuat Server Slave](#1b-membuat-server-slave)
+  - [2. Konfigurasi Replikasi MySQL](#2-konfigurasi-replikasi-mysql)
+    - [2a. Konfigurasi Master Node](#2a-konfigurasi-master-node)
+    - [2b. Konfigurasi Slave Node](#2b-konfigurasi-slave-node)
+
 ## Deskripsi Tugas
 Tugas ini menerapkan konsep yang ada di Chapter 2 (RDBMS & Network Communication.
 
@@ -40,8 +50,125 @@ Yang harus dilakukan adalah:
 
 * Gambar arsitektur server yang digunakan:
   
-  ![Gambar Arsitektur Server](/img/arsitektur-server.jpg)
+  ![Gambar Arsitektur Server](/Tugas-1/img/arsitektur-server.jpg)
   
-#### 1a. Menyiapkan Server Master
-#### 1a. Menyiapkan Server Slave
+#### 1a. Membuat Server Master
+#### 1b. Membuat Server Slave
+> Prasyarat: Sudah menginstall **VirtualBox** dan **Vagrant**
+
+1. Membuat folder baru, kemudian pindah ke dalam folder tersebut.
+    ```bash
+    mkdir bdt-2018
+    cd bdt-2018
+    ```
+2. Inisialisasi vagrant.
+    ```bash
+    Vagrant init
+    ```
+    Setelah menjalankan perintah tersebut akan otomatis membuat file baru bernama **Vagrantfile**.
+3. Mengedit isi **Vagrantfile** menjadi:
+    ```bash
+    Vagrant.configure("2") do |config|
+      config.vm.box = "ubuntu/xenial64"
+
+      config.vm.network "public_network", ip: "10.151.36.69"
+
+      config.vm.provider "virtualbox" do |vb|
+          vb.memory = "1024"
+          vb.cpus = 2
+      end
+
+      config.vm.provision "shell", path: "provision.sh"
+    end
+    ```
+
+    Keterangan:
+    
+    * Mengubah **config.vm.box** sesuai dengan box ubuntu yang akan digunakan. Sebelumnya unduh terlebih dahulu box tersebut dengan menjalankan `vagrant box add ubuntu/xenial64`.
+    * **config.vm.network "public_network"** diuncomment dan diberikan alamat IP tertentu.
+    * Menambahkan **vb.cpus** sebanyak 2
+    * Menambahkan `config.vm.provision "shell", path: "provision.sh"` di paling akhir untuk menambahkan file provision yang akan dibahas pada langkah ke-4.
+4. Membuat file **provision.sh** dengan menjalankan command `nano provision.sh` dan isi dengan:
+    ```bash
+    #!/usr/bin/env bash
+    apt-get update
+
+    # install mysql
+    # export DEBIAN_FRONTEND=noninteractive
+    debconf-set-selections <<< 'mysql-server mysql-server/root_password password kucinglucu'
+    debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password kucinglucu'
+    apt-get install -y mysql-server
+    apt-get install -y mysql-client mysql-common
+
+    sudo service mysql restart
+    ``` 
+5. Menyalakan vagrant virtualbox dengan command `vagrant up`.
+6. Melakukan provisioning aplikasi dengan menjalankan command `vagrant provision` atau `vagrant reload --provision`.
+7. Masuk ke dalam vagrant dengan menjalankan command `vagrant ssh`.
+8. Membuat user baru bebas dengan command `sudo adduser daus` dan membuat password supaya vagrant virtualbox bisa diakses dari luar menggunakan ssh.
+    > Keterangan: "daus" adalah nama user yang dibuat.
+9. Menambahkan user baru tersebut ke dalam **sudoer** dengan menjalankan command `sudo usermod -a -G sudo daus`.
+
+## 2. Konfigurasi Replikasi MySQL
+### 2a. Konfigurasi Master Node
+1. Membuka file konfigurasi MySQL.
+    ```bash
+    sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+    ```
+2. Mengubah dan menambahkan konfigurasi berikut pada Master node.
+    ```bash
+    bind-address            = 0.0.0.0
+    
+    server-id               = 1
+    log_bin                 = /var/log/mysql/mysql-bin.log
+    binlog_do_db            = employees
+    ```
+
+    ![Screenshot 1](/Tugas-1/img/ss1.png)
+
+    Keterangan:
+    * **bind-address** diubah menjadi 0.0.0.0 pada semua host.
+    * **server-id** diuncomment dan diberikan angka yang berbeda pada semua node server.
+    * Menambahkan **log_bin** untuk mendefinisikan letak nyata dimana replikasi disimpan. Slave server akan menyalin semua perubahan yang terdaftar di log.
+    * Menambahkan **binlog_do_db** untuk mendefinisikan nama database yang akan direplikasi.
+
+3. Me-restart MySQL.
+    ```bash
+    sudo service mysql restart
+    ```
+4. Masuk ke dalam MySQL dengan username "root" dan password "kucinglucu".
+    ```bash
+    mysql -u root -p
+    ```
+5. Memberikan privilege (hak istimewa) kepada Slave untuk malakukan replikasi dan mengatur password-nya.
+    ```bash
+    GRANT REPLICATION SLAVE ON *.* TO 'slave_user'@'%' IDENTIFIED BY 'kucinglucu';
+    ```
+    > Keterangan: "kucinglucu" adalah password yang diatur.
+    
+    Kemudian dilanjutkan dengan 
+    ```bash 
+    FLUSH PRIVILEGES;
+    ```
+6. Membuat database baru bernama **employees**.
+    ```bash
+    CREATE DATABASE employees;
+    ```
+    Kemudian, masuk ke dalam database tersebut.
+    ```bash
+    USE employees;
+    ```
+8. Mengunci database untuk mencegah perubahan yang masuk.
+    ```bash
+    FLUSH TABLES WITH READ LOCK;
+    ```
+9. Melihat status master.
+    ```bash
+    SHOW MASTER STATUS;
+    ```
+    Maka akan muncul tabel seperti di bawah ini:
+    
+
+
+### 2b. Konfigurasi Slave Node
 

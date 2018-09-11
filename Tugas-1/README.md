@@ -7,13 +7,14 @@
       - [1a. Membuat Server Master](#1a-membuat-server-master)
       - [1b. Membuat Server Slave](#1b-membuat-server-slave)
     - [2. Konfigurasi Replikasi MySQL](#2-konfigurasi-replikasi-mysql)
-      - [2a. Konfigurasi Master Node](#2a-konfigurasi-master-node)
-      - [2b. Konfigurasi Slave Node](#2b-konfigurasi-slave-node)
+      - [2a. Konfigurasi Server Master](#2a-konfigurasi-server-master)
+      - [2b. Konfigurasi Server Slave](#2b-konfigurasi-server-slave)
     - [3. Pengujian Proses Replikasi MySQL](#3-pengujian-proses-replikasi-mysql)
-    - [4. Promote Slave As Master](#4-promote-slave-as-master)
-      - [4a. Pada Server Master Lama](#4a-pada-server-master-lama)
-      - [4b. Pada Server Master Baru](#4b-pada-server-master-baru)
-      - [4c. Pada Server Slave](#4c-pada-server-slave)
+    - [4. Proses Recovery](#4-proses-recovery)
+      - [4a. Promote Slave As Master](#4a-promote-slave-as-master)
+      - [4b. Konfigurasi Server Master Baru](#4b-konfigurasi-server-master-baru)
+      - [4c. Konfigurasi Server Slave](#4c-konfigurasi-server-slave)
+    - [5. Pengujian Replikasi MySQL dengan Master yang Baru](#5-pengujian-replikasi-mysql-dengan-master-yang-baru)
 
 ## Deskripsi Tugas
 Tugas ini menerapkan konsep yang ada di Chapter 2 (RDBMS & Network Communication).
@@ -117,7 +118,7 @@ Master dibuat menggunakan **Ansible** dengan hanya melakukan clone dari Virtual 
 9. Menambahkan user baru tersebut ke dalam **sudoer** dengan menjalankan command `sudo usermod -a -G sudo daus`.
 
 ### 2. Konfigurasi Replikasi MySQL
-#### 2a. Konfigurasi Master Node
+#### 2a. Konfigurasi Server Master
 1. Membuka file konfigurasi MySQL.
     ```shell
     sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
@@ -167,11 +168,11 @@ Master dibuat menggunakan **Ansible** dengan hanya melakukan clone dari Virtual 
     USE employees;
     ```
     > Database di download dari link berikut https://dev.mysql.com/doc/employee/en/
-8. Mengunci database untuk mencegah perubahan yang masuk.
+7. Mengunci database untuk mencegah perubahan yang masuk.
     ```mysql
     FLUSH TABLES WITH READ LOCK;
     ```
-9. Melihat status master.
+8. Melihat status master.
     ```mysql
     SHOW MASTER STATUS;
     ```
@@ -187,17 +188,17 @@ Master dibuat menggunakan **Ansible** dengan hanya melakukan clone dari Virtual 
     ```
     > File dan Position wajib diingat-ingat untuk melakukan konfigurasi Slave nantinya
 
-10. Membuka window terminal baru dan mengekspor database menggunakan **mysqldump**.
+9.  Membuka window terminal baru dan mengekspor database menggunakan **mysqldump**.
     ```shell
     mysqldump -u root -p --opt employees > employees.sql
     ```
-11. Kembali ke window mysql yang sebelumnya dan membuka kunci database supaya database bisa menerima perubahan kembali.
+10. Kembali ke window mysql yang sebelumnya dan membuka kunci database supaya database bisa menerima perubahan kembali.
     ```mysql
     UNLOCK TABLES;
     QUIT;
     ```
 
-#### 2b. Konfigurasi Slave Node
+#### 2b. Konfigurasi Server Slave
 1. Masuk ke dalam MySQL, membuat database baru, kemudian keluar.
     ```mysql
     mysql -u root -p
@@ -231,7 +232,7 @@ Master dibuat menggunakan **Ansible** dengan hanya melakukan clone dari Virtual 
     * Menambahkan **log_bin** dan **relay-log**.
     * Menambahkan **binlog_do_db** untuk mendefinisikan nama database yang akan direplikasi.
 
-4. Me-restart MySQL.
+5. Me-restart MySQL.
     ```shell
     sudo service mysql restart
     ```
@@ -276,11 +277,11 @@ Master dibuat menggunakan **Ansible** dengan hanya melakukan clone dari Virtual 
 4. Mengecek apakah isi database pada semua node Slave sama dengan isi database pada node Master. Jika isi database sama, maka proses replikasi MySQL sudah berjalan dengan baik.
     ![Slave Replicated](/Tugas-1/img/ss3d.png)
 
-### 4. Promote Slave As Master
-#### 4a. Pada Server Master Lama
-* Koneksi pada server master harus terputus terlebih dahulu, salah satu caranya adalah dengan mematikan layanan mysql pada server master.
-* Pada server Slave, menjalankan perintah `SHOW SLAVE STATUS\G` untuk melihat status server slave:
-* Jika pada kolom **Slave_SQL_Running_State** menampilkan _“Slave has read all relay log; waiting for more updates”_, maka server slave dapat di*promote* menjadi server master dengan cara me*reset* calon server master seperti berikut:
+### 4. Proses Recovery
+#### 4a. Promote Slave As Master
+* Koneksi pada server Master harus terputus terlebih dahulu. Salah satu caranya adalah dengan mematikan layanan MySQL pada server Master.
+* Pada server Slave, menjalankan perintah `SHOW SLAVE STATUS\G` untuk melihat status server Slave.
+* Jika pada kolom **Slave_SQL_Running_State** menampilkan _“Slave has read all relay log; waiting for more updates”_, maka server Slave dapat di*promote* menjadi server Master dengan cara me*reset* calon server Master seperti berikut:
   ```mysql
   mysql> STOP SLAVE;
   Query OK, 0 rows affected (0.01 sec)
@@ -289,7 +290,7 @@ Master dibuat menggunakan **Ansible** dengan hanya melakukan clone dari Virtual 
   Query OK, 0 rows affected (0.01 sec)
   ```
   ![Reset Slave](/Tugas-1/img/ss4a.png)
-#### 4b. Pada Server Master Baru
+#### 4b. Konfigurasi Server Master Baru
 * Membuka pengaturan MySQL pada server Master yang baru dengan cara:
   ```shell
   sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
@@ -323,17 +324,18 @@ Master dibuat menggunakan **Ansible** dengan hanya melakukan clone dari Virtual 
   UNLOCK TABLES;
   QUIT;
   ```
-#### 4c. Pada Server Slave
+#### 4c. Konfigurasi Server Slave
 * Membuat *database* baru bernama `sakila` pada server slave:
   ```mysql
   CREATE DATABASE sakila;
   EXIT;
   ```
-* Mengimpor *database* yang telah diekspor dan dikirim dari server master
+* Mengimpor *database* yang telah diekspor dan dikirim dari server Master
   ```shell
-  mysql -u root -p sakila < sakila.sql
+  mysql -u root -p -D sakila < sakila.sql
   ```
-* Membuka pengaturan mysql pada server slave dengan cara:
+  > Keterangan: -D untuk mendefinisikan database. Jika tanpa -D, database tidak berhasil terimpor.
+* Membuka pengaturan MySQL pada server Slave dengan cara:
   ```shell
   sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
   ```
@@ -341,7 +343,7 @@ Master dibuat menggunakan **Ansible** dengan hanya melakukan clone dari Virtual 
   ```shell
   sudo service mysql restart
   ```
-* Membuka kembali MySQL shell kembali dan lakukan perubahan konfigurasi server master yang terdapat pada MySQL server slave dengan cara:
+* Membuka kembali MySQL shell kembali dan lakukan perubahan konfigurasi server Master yang terdapat pada MySQL server slave dengan cara:
   ```mysql
   CHANGE MASTER TO MASTER_HOST='10.151.36.196',MASTER_USER='slave1', MASTER_PASSWORD='kucinglucu', MASTER_LOG_FILE='mysql-bin.000001', MASTER_LOG_POS=  107;
   ```
@@ -353,3 +355,11 @@ Master dibuat menggunakan **Ansible** dengan hanya melakukan clone dari Virtual 
   ```mysql
   SHOW SLAVE STATUS\G
   ```
+### 5. Pengujian Replikasi MySQL dengan Master yang Baru
+Sama seperti pengujian yang sebelumnya, pengujian dapat dilakukan dengan menjalankan query pada node Master. Contohnya menambah record data pada salah satu table dalam database.
+
+![Pengujian Baru 1](/Tugas-1/img/pengujian1.jpg)
+
+Kemudian mengecek apakah isi database pada semua node Slave sama dengan isi database pada node Master. Jika isi database sama, maka proses replikasi MySQL sudah berjalan dengan baik.
+
+![Pengujian Baru 1](/Tugas-1/img/pengujian2.jpg)

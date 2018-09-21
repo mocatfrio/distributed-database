@@ -14,7 +14,7 @@
             - [4a. Promote Slave As Master](#4a-promote-slave-as-master)
             - [4b. Konfigurasi Server Master Baru](#4b-konfigurasi-server-master-baru)
             - [4c. Konfigurasi Server Slave](#4c-konfigurasi-server-slave)
-        - [5. Pengujian Replikasi MySQL dengan Master yang Baru](#5-pengujian-replikasi-mysql-dengan-master-yang-baru)
+        - [5. Pengujian Proses Replikasi MySQL dengan Master yang Baru](#5-pengujian-proses-replikasi-mysql-dengan-master-yang-baru)
 
 ## Deskripsi Tugas
 Tugas ini menerapkan konsep yang ada di Chapter 2 (RDBMS & Network Communication).
@@ -355,7 +355,7 @@ Master dibuat menggunakan **Ansible** dengan hanya melakukan clone dari Virtual 
   ```mysql
   SHOW SLAVE STATUS\G
   ```
-### 5. Pengujian Replikasi MySQL dengan Master yang Baru
+### 5. Pengujian Proses Replikasi MySQL dengan Master yang Baru
 Sama seperti pengujian yang sebelumnya, pengujian dapat dilakukan dengan menjalankan query pada node Master. Contohnya menambah record data pada salah satu table dalam database.
 
 ![Pengujian Baru 1](/Tugas-1/img/pengujian1.jpg)

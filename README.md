@@ -1,4 +1,5 @@
 # Basis Data Terdistribusi 2018
+Dokumentasi Mata Kuliah Basis Data Terdistribusi 2018
 
 ## Kelompok
 1. 5115100043 - Hafara Firdausi​
@@ -7,6 +8,8 @@
 4. 5115100119 - Cahya Putra Hikmawan​
 5. 5115100141 - Nahda Fauziyah Zahra
 
-## Tugas
-1. [Replikasi pada MySQL](/Tugas-1)
-2. [Fragmentasi pada MySQL](/Tugas-2)
+## Tugas Kelompok
+1. Tugas 1 : [Replikasi pada MySQL](/Tugas-1) 
+
+## Tugas Individu
+2. Tugas 2 : [Partisi Basis Data](/Tugas-2) 

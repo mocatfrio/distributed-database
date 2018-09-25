@@ -8,8 +8,8 @@
         - [Deskripsi Dataset](#deskripsi-dataset)
         - [Proses Pembuatan Partisi](#proses-pembuatan-partisi)
             - [Langkah 1 - Menentukan Tabel yang akan Dipartisi](#langkah-1---menentukan-tabel-yang-akan-dipartisi)
-                - [Tabel 1](#tabel-1)
-                - [Tabel 2](#tabel-2)
+                - [Tabel Payment](#tabel-payment)
+                - [Tabel Rental](#tabel-rental)
             - [Langkah 2 - Implementasi Partisi](#langkah-2---implementasi-partisi)
         - [Benchmarking](#benchmarking)
     - [Implementasi Partisi 2 : Measures Dataset](#implementasi-partisi-2--measures-dataset)
@@ -26,7 +26,7 @@
 ## Deskripsi Server yang Digunakan
 * Server dibuat menggunakan teknologi **Vagrant Virtualbox**, dengan spesifikasi sebagai berikut :
     * Sistem Operasi : Ubuntu 16.04.5 LTS Xenial
-    * Versi MySQL : Mysql  Ver 14.14 Distrib 5.7.23
+    * Versi MySQL : MySQL Ver 14.14 Distrib 5.7.23
     * RAM : 1024 MB (992 MB)
     * CPU : 2 core
 * Detail pembuatan server kurang lebih sama seperti pada [tugas 1](https://github.com/mocatfrio/bdt-2018/tree/master/Tugas-1)
@@ -49,7 +49,7 @@
         end
         ``` 
         Keterangan:
-        * Menambahkan `config.vm.synced_folder` untuk mensinkronkan folder pada host dan virtualbox. Di dalam folder `db/` terdapat Sakila database dan Sample 18M rows data.
+        * Menambahkan `config.vm.synced_folder` untuk mensinkronkan folder pada host dan virtualbox. Di dalam folder `db/` terdapat Sakila Database dan Measures Dataset.
   
     * Provision.sh
   
@@ -74,46 +74,29 @@
   
     ```bash
     mysql -u root -p
-    *masukkan password*
     ```
     ```mysql
-    SOURCE /home/vagrant/sakila-db/sakila-scheme.sql
-    SOURCE /home/vagrant/sakila-db/sakila-data.sql
+    mysql> SOURCE /path/to/file;
+    ```
+    Contoh:
+    ```mysql
+    mysql> SOURCE /home/vagrant/sakila-db/sakila-scheme.sql;
+    mysql> SOURCE /home/vagrant/sakila-db/sakila-data.sql;
     ```
 * Dataset Sakila terdiri dari **23 tabel**, yaitu:
   
-  ![Tabel Sakila Database](/Tugas-2/img/1.png)
+  ![Tabel Sakila Database](/Tugas-2/img/1.png "Tabel Sakila Database")
 
 * Masing-masing tabel memiliki jumlah baris data sebagai berikut:
 
-    No | Nama Tabel | Jumlah Data
-    --- | --- | ---
-    1 | actor | 200
-    2 | actor_info | 200
-    3 | address | 603
-    4 | category | 16
-    5 | city | 600
-    6 | country | 109
-    7 | customer | 599
-    8 | customer_list | 599
-    9 | film | 1000
-    10 | film_actor | 5462
-    11 | film_category | 1000
-    12 | film_list | 997
-    13 | film_text | 1000
-    14 | inventory | 4581
-    15 | language | 6
-    16 | nicer_but_slower_film_list | 997
-    17 | payment | 16049
-    18 | rental | 16044
-    19 | sales_by_film_category | 16
-    20 | sales_by_store | 2
-    21 | staff | 2
-    22 | staff_list | 2
-    23 | store | 2
-
+  ![Jumlah Baris Data Sakila Database](/Tugas-2/img/3.png "Jumlah Baris Data Sakila Database")
+   
     Keterangan:
-    * Jumlah data dapat dicari dengan command `SELECT COUNT(*) FROM *nama tabel*;` contoh:
+    * Jumlah baris data semua tabel pada Sakila Database dapat dicari dengan:
+        ```mysql
+        SELECT TABLE_NAME, TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'sakila';
+        ```
+    * Jumlah baris data juga dapat dicari satu-satu dengan command `SELECT COUNT(*) FROM *nama tabel*;` contoh:
   
         ```mysql
         mysql> select count(*) from payment;
@@ -127,24 +110,27 @@
 
 ### Proses Pembuatan Partisi
 #### Langkah 1 - Menentukan Tabel yang akan Dipartisi
-* Pemilihan tabel yang akan dipartisi ditentukan berdasarkan jumlah data terbanyak dari semua tabel pada Database Sakila
-* Daftar tabel yang akan dipartisi
+* Pemilihan tabel yang akan dipartisi ditentukan berdasarkan **jumlah data terbanyak** dari semua tabel pada database Sakila. Tabel Payment dan Rental memiliki jumlah data paling banyak diantara semua tabel yakni 16049 dan 16044, serta memiliki kemungkinan pertambahan data yang signifikan karena tabel bersifat transaksional dan datanya sering berubah-ubah.
+* Daftar tabel yang akan dipartisi:
+    * Tabel **Payment**
+    * Tabel **Rental**
 
-##### Tabel 1
+##### Tabel Payment
+* Jenis partisi yang d  igunakan: 
 * Predicate dalam membuat partisi:
     * P1:
     * P2:
     * P3:
-* Jenis partisi yang digunakan:
+
 * Berdasarkan predikat-predikat diatas, maka tabel akan dipartisi menjadi ... bagian
 * Nama dari partisi-partisinya adalah sebagai berikut:
   
-##### Tabel 2
+##### Tabel Rental
+* Jenis partisi yang digunakan:
 * Penentuan predicate dalam dalam membuat partisi:
     * P1:
     * P2:
     * P3:
-* Jenis partisi yang digunakan:
 * Berdasarkan predikat-predikat diatas, maka tabel akan dipartisi menjadi ... bagian
 * Nama dari partisi-partisinya adalah sebagai berikut:
   
@@ -171,7 +157,7 @@
   
 ## Implementasi Partisi 2 : Measures Dataset
 ### Deskripsi Dataset
-* Dataset yang digunakan adalah **Measures Dataset**. Dapat diunduh di https://drive.google.com/uc?authuser=0&id=0B2Ksz9hP3LtXRUppZHdhT1pBaWM&export=download 
+* Dataset yang digunakan adalah **Measures Dataset**. Dapat diunduh di https://drive.google.com/file/d/0B2Ksz9hP3LtXRUppZHdhT1pBaWM/view
 * Dataset Measures terdiri dari **2 tabel**, yaitu:
   
   ![Tabel Measures Dataset](/Tugas-2/img/2.png)
@@ -192,9 +178,8 @@
 
     ```bash
     mysql -u root -p
-    **insert password**
     ```
-3. Membuat database bernama **measures**. Dataset tidak dapat terimpor jika database belum dibuat.
+3. Membuat database bernama **measures**. Dataset tidak dapat diimpor jika database belum dibuat.
    
     ```mysql
     CREATE DATABASE measures;
@@ -203,15 +188,11 @@
 5. Mengimpor Measures Dataset
     ```bash
     mysql -u root -p -D measures < *nama file dataset*
-    **insert password**
     ```
     Contoh:
     ```bash
     mysql -u root -p -D measures < sample_1_8_M_rows_data.sql
-    **insert password**
     ```
-
-
 
 ### Benchmarking
 #### Select Queries Benchmark

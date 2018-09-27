@@ -116,13 +116,16 @@
     * Tabel **Rental**
 
 ##### Tabel Payment
-* Jenis partisi yang d  igunakan: 
+* Jenis partisi yang digunakan: **RANGE** 
 * Predicate dalam membuat partisi:
-    * P1:
-    * P2:
-    * P3:
+    * _p<sub>1</sub>_ : Data dengan **payment_date** tanggal 1-5
+    * _p<sub>2</sub>_ : Data dengan **payment_date** tanggal 6-10
+    * _p<sub>3</sub>_ : Data dengan **payment_date** tanggal 11-15
+    * _p<sub>4</sub>_ : Data dengan **payment_date** tanggal 16-20
+    * _p<sub>5</sub>_ : Data dengan **payment_date** tanggal 21-25
+    * _p<sub>6</sub>_ : Data dengan **payment_date** tanggal 26-31
 
-* Berdasarkan predikat-predikat diatas, maka tabel akan dipartisi menjadi ... bagian
+* Berdasarkan predikat-predikat diatas, maka tabel akan dipartisi menjadi 6 bagian
 * Nama dari partisi-partisinya adalah sebagai berikut:
   
 ##### Tabel Rental

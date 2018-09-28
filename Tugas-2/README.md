@@ -1,4 +1,6 @@
+### Basis Data Terdistribusi
 # Implementasi Partisi Basis Data
+Oleh: **Hafara Firdausi (05111540000043)**
 
 ## Outline
 - [Implementasi Partisi Basis Data](#implementasi-partisi-basis-data)
@@ -19,7 +21,11 @@
         - [3.2 Cara Impor Dataset](#32-cara-impor-dataset)
         - [3.3 Benchmarking](#33-benchmarking)
             - [3.3.1 Select Queries Benchmark](#331-select-queries-benchmark)
+                - [Langkah-Langkah](#langkah-langkah)
+                - [Hasil](#hasil)
             - [3.3.2 Big Delete Benchmark](#332-big-delete-benchmark)
+                - [Langkah-Langkah](#langkah-langkah)
+                - [Hasil](#hasil)
         - [3.4 Kesimpulan](#34-kesimpulan)
     - [Referensi](#referensi)
 
@@ -37,15 +43,18 @@ Server yang digunakan memiliki deskripsi sebagai berikut :
 * Dataset yang digunakan adalah **Sakila Database**. Dapat diunduh di http://downloads.mysql.com/docs/sakila-db.zip 
 * Cara impor:
     1. Masuk ke dalam mysql.
+   
         ```bash
         mysql -u root -p
         ```
     2. Impor database dari skema yang telah diunduh.
         Format :
+
         ```mysql
         mysql> SOURCE /path/to/file;
         ```
         Penggunaan :
+        
         ```mysql
         mysql> SOURCE sakila-db/sakila-scheme.sql;
         mysql> SOURCE sakila-db/sakila-data.sql;
@@ -60,6 +69,7 @@ Server yang digunakan memiliki deskripsi sebagai berikut :
    
     Keterangan:
     * Jumlah baris data semua tabel pada Sakila Database dapat dicari dengan:
+  
         ```mysql
         SELECT TABLE_NAME, TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'sakila' ORDER BY TABLE_ROWS DESC;
         ```
@@ -86,6 +96,7 @@ Server yang digunakan memiliki deskripsi sebagai berikut :
 ##### Tabel Payment
 * Jenis partisi yang digunakan pada tabel Payment adalah partisi **HASH** dengan parameter **payment_id**.
 * Jenis partisi **HASH** tidak memerlukan predikat/syarat karena memiliki perhitungan sendiri untuk menentukan letak penyimpanan data, yakni:
+  
     ```
     N = MOD(expr, num)
     ```
@@ -116,6 +127,7 @@ Server yang digunakan memiliki deskripsi sebagai berikut :
 #### 2.2.2 Implementasi Partisi
 Implementasi partisi dilakukan dengan mengubah script skema SQL yang sudah ada dan menjalankan ulang script SQL-nya.
 1. Menambah dan mengubah script SQL untuk membuat partisi tabel **Payment**.
+   
     ```mysql
     CREATE TABLE payment (
         payment_id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -141,6 +153,7 @@ Implementasi partisi dilakukan dengan mengubah script skema SQL yang sudah ada d
     * Setelah meng-comment, jangan lupa menghapus tanda koma pada row sebelumnya.
 
 2. Menambah dan mengubah script SQL untuk membuat partisi tabel **Rental**.
+   
     ```mysql
     CREATE TABLE rental (
         rental_id INT NOT NULL AUTO_INCREMENT,
@@ -174,6 +187,7 @@ Implementasi partisi dilakukan dengan mengubah script skema SQL yang sudah ada d
     * Fungsi partisi untuk RANGE berdasarkan tanggal menggunakan perintah `DAY()`;
 
 3. Menjalankan ulang script skema SQL yang telah diubah dan diatur konfigurasi partisinya. 
+   
     ```bash
     mysql -u root -p
     ```
@@ -197,6 +211,7 @@ Implementasi partisi dilakukan dengan mengubah script skema SQL yang sudah ada d
     Jika ada error, maka dicari tahu terlebih dahulu letak errornya dan diselesaikan.
 
 4. Cek partisi yang sudah dibuat dengan command `EXPLAIN SELECT * FROM nama_tabel\G`
+   
     ![Hasil Partisi](/Tugas-2/img/4.png)
 
 ### 2.3 Benchmarking
@@ -278,6 +293,7 @@ Untuk mengecek apakah proses partisi telah benar-benar berhasil, maka dilakukan 
 
 2. Melakukan pengujian menggunakan query SELECT dengan kasus untuk mencari data dengan **payment_id = 43**, dimana `43 mod 6 = 1` sehingga data seharusnya disimpan pada partisi **_p<sub>1</sub>_**.
    * Menjalankan query SELECT data dengan payment_id = 43 dari partisi yang benar.
+  
         ```mysql
         SELECT * FROM payment PARTITION(p1) WHERE payment_id = 43;
         ```
@@ -286,6 +302,7 @@ Untuk mengecek apakah proses partisi telah benar-benar berhasil, maka dilakukan 
         ![Hasil Pengujian pada Partisi yang Benar](/Tugas-2/img/5.png "Hasil Pengujian pada Partisi yang Benar")
 
     * Menjalankan query SELECT data dengan payment_id = 43 dari partisi yang salah.
+  
         ```mysql
         SELECT * FROM payment PARTITION(p0) WHERE payment_id = 43;
         SELECT * FROM payment PARTITION(p2) WHERE payment_id = 43;
@@ -350,6 +367,7 @@ Untuk mengecek apakah proses partisi telah benar-benar berhasil, maka dilakukan 
     ````
 2. Melakukan pengujian menggunakan query SELECT dengan kasus untuk mencari data dengan **rental_date tanggal 19**, dimana tanggal 19 seharusnya tersimpan pada partisi `day_from_11_to_20`.
    * Menjalankan query SELECT data dengan rental_date = 19 dari partisi yang benar.
+  
         ```mysql
         -- SELECT berdasarkan tanggal saja
         SELECT * FROM rental PARTITION(day_from_11_to_20) WHERE DAY(rental_date) = 19;
@@ -363,6 +381,7 @@ Untuk mengecek apakah proses partisi telah benar-benar berhasil, maka dilakukan 
         ![Hasil Pengujian pada Partisi yang Benar](/Tugas-2/img/8.png "Hasil Pengujian pada Partisi yang Benar")
 
     * Menjalankan query SELECT data dengan rental_date = 19 dari partisi yang salah.
+  
         ```mysql
         SELECT * FROM rental PARTITION(day_from_1_to_10) WHERE DAY(rental_date) = 19;
         SELECT * FROM rental PARTITION(day_from_21_and_up) WHERE DAY(rental_date) = 19;
@@ -381,10 +400,10 @@ Untuk mengecek apakah proses partisi telah benar-benar berhasil, maka dilakukan 
 
 * Masing-masing tabel memiliki jumlah baris data sebagai berikut:
   
-    No | Nama Tabel | Jumlah Data
-    --- | --- | ---
-    1 | measures | 1846124
-    2 | partitioned_measures | 1846124
+    | No | Nama Tabel | Jumlah Data |
+    | --- | --- | --- |
+    | 1 | measures | 1846124 |
+    | 2 | partitioned_measures | 1846124 |
 
     Keterangan:
     * Tabel  **partitioned_measures** adalah bentuk partisi dari tabel **measures**, sehingga keduanya memiliki jumlah data yang sama. 
@@ -413,9 +432,22 @@ Untuk mengecek apakah proses partisi telah benar-benar berhasil, maka dilakukan 
     mysql -u root -p -D vertabelo < sample_1_8_M_rows_data.sql
     ```
 ### 3.3 Benchmarking
-Ada 2 jenis benchmark, yakni SELECT queries benchmark dan BIG DELETE benchmark, yang dilakukan sebanyak 10 kali pada masing-masing tabel. Kemudian kecepatan query-nya dicatat dan dirata-rata.
+Ada 2 jenis benchmark, yakni SELECT Queries Benchmark dan Big Delete Benchmark, yang dilakukan sebanyak 10 kali pada masing-masing tabel, kemudian kecepatan query-nya dicatat dan dirata-rata.
+
 #### 3.3.1 Select Queries Benchmark
-* SELECT queries pada tabel **measures** (tanpa partisi)
+##### Langkah-Langkah
+1. Sebelum melakukan select queries benchmark, **index** pada kedua tabel harus dihapus terlebih dahulu supaya terlihat performa asli query.
+   
+    ```mysql
+    ALTER TABLE vertabelo.measures 
+    DROP INDEX measure_timestamp;
+    
+    ALTER TABLE vertabelo.partitioned_measures 
+    DROP INDEX measure_timestamp;
+    ```
+
+2. SELECT query pada tabel **measures** (tanpa partisi)
+   
     ```mysql
     SELECT SQL_NO_CACHE
         COUNT(*)
@@ -425,7 +457,8 @@ Ada 2 jenis benchmark, yakni SELECT queries benchmark dan BIG DELETE benchmark, 
         measure_timestamp >= '2016-01-01'
             AND DAYOFWEEK(measure_timestamp) = 1;
     ```
-* SELECT queries pada tabel **measures_partitioned**
+3. SELECT query pada tabel **partitioned_measures**
+   
     ```mysql
     SELECT SQL_NO_CACHE
         COUNT(*)
@@ -435,37 +468,82 @@ Ada 2 jenis benchmark, yakni SELECT queries benchmark dan BIG DELETE benchmark, 
         measure_timestamp >= '2016-01-01'
             AND DAYOFWEEK(measure_timestamp) = 1;
     ```
-* Hasil :
-    | No. Pengujian | Tabel Tanpa Partisi (detik) | Tabel Dengan Partisi (detik) |
-    --- | --- | ---
-    1 |
-    2 |
-    3 |
-    4 |
-    5 |
-    6 |
-    7 |
-    8 |
-    9 |
-    10 |
+##### Hasil
+
+| No. Pengujian | Tabel Tanpa Partisi (detik) | Tabel Dengan Partisi (detik) |
+| --- | --- | --- |
+| 1 | 0.795 | 0.521 |
+| 2 | 0.877 | 0.439 |
+| 3 | 0.865 | 0.428 |
+| 4 | 0.885 | 0.448 |
+| 5 | 1.020 | 0.443 |
+| 6 | 0.871 | 0.435 |
+| 7 | 0.878 | 0.496 |
+| 8 | 0.812 | 0.441 |
+| 9 | 0.879 | 0.449 |
+| 10 | 0.812 | 0.442 |
+| **Rata-Rata** | **0.8694** | **0.4542** |
    
+* Hasil select query terhadap tabel **measures** (tanpa partisi)
+
+    ![Hasil Select Query Tabel Measures](/Tugas-2/img/10.png "Hasil Select Query Tabel Measures")
+
+* Hasil select query terhadap tabel **partitioned_measures**
+
+    ![Hasil Select Query Tabel Partitioned Measures](/Tugas-2/img/11.png "Hasil Select Query Tabel Partitioned Measures")
+
 #### 3.3.2 Big Delete Benchmark
-* SELECT queries pada tabel **measures** (tanpa partisi)
+##### Langkah-Langkah
+1. Sebelum melakukan big delete benchmark, **index** pada `measure_timestamp` harus ditambahkan kembali terlebih dahulu.
+   
     ```mysql
     ALTER TABLE vertabelo.measures
     ADD INDEX index1 (measure_timestamp ASC);
+
+    ALTER TABLE vertabelo.partitioned_measures
+    ADD INDEX index1 (measure_timestamp ASC);
     ```
-* SELECT queries pada tabel **partitioned_measures**
+2. Big delete pada tabel **measures** (tanpa partisi)
+   
     ```mysql
-    SELECT SQL_NO_CACHE
-        COUNT(*)
-    FROM
-        vertabelo.partitioned_measures
-    WHERE
-        measure_timestamp >= '2016-01-01'
-            AND DAYOFWEEK(measure_timestamp) = 1;
+    DELETE
+    FROM vertabelo.measures
+    WHERE measure_timestamp < '2015-01-01';
     ```
+3. Big delete pada tabel **partitioned_measures**
+   
+    ```mysql
+    ALTER TABLE vertabelo.partitioned_measures 
+    DROP PARTITION to_delete_logs;
+    ```
+
+##### Hasil
+
+| No. Pengujian | Tabel Tanpa Partisi (detik) | Tabel Dengan Partisi (detik) |
+| --- | --- | --- |
+| 1 | 1.675 | 0.528 |
+| 2 | 2.225 | 0.448 |
+| 3 | 1.446 | 0.332 |
+| 4 | 1.274 | 0.404 |
+| 5 | 1.159 | 0.501 |
+| 6 | 1.481 | 0.334 |
+| 7 | 1.358 | 0.325 |
+| 8 | 1.606 | 0.369 |
+| 9 | 1.992 | 0.350 |
+| 10 | 1.179 | 0.320 |
+| **Rata-Rata** | **1.5395** | **0.3911** |
+
+* Hasil big delete terhadap tabel **measures** dan **partitioned_measures** (bergantian/berselingan)
+
+    ![Hasil Big Delete](/Tugas-2/img/12.png "Hasil Big Delete")
+
+    ![Hasil Big Delete](/Tugas-2/img/13.png "Hasil Big Delete")
+
+
 ### 3.4 Kesimpulan
+Dari hasil benchmarking di atas, dapat disimpulkan bahwa:
+* **Kecepatan select query pada tabel yang dipartisi hampir dua kali lebih cepat** dibandingkan dengan kecepatan select query pada tabel yang tidak dipartisi.
+* **Proses menghapus data hampir empat kali lebih cepat** dilakukan pada tabel yang dipartisi karena hanya perlu menghapus partisi tertentu yang berisi data-data yang ingin dihapus. Sedangkan pada tabel yang tidak dipartisi, proses penghapusan data lebih lama karena harus mencari dan memilah terlebih dahulu data yang ingin dihapus.
 
 ## Referensi
 * Claria, Francisco, (10 Februari 2017), Everything You Need to Know About MySQL Partitions, [online], (http://www.vertabelo.com/blog/technical-articles/everything-you-need-to-know-about-mysql-partitions, diakses tanggal 25 September 2018)

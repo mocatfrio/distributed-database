@@ -1,7 +1,10 @@
 ### Basis Data Terdistribusi
 # Implementasi Partisi Basis Data
 Oleh: **Hafara Firdausi (05111540000043)**
+<<<<<<< HEAD
 https://github.com/mocatfrio/bdt-2018/tree/master/Tugas-2
+=======
+>>>>>>> b342f1eeb3c57977dcada3a57f237718b0c36610
 
 ## Outline
 - [Implementasi Partisi Basis Data](#implementasi-partisi-basis-data)
@@ -75,7 +78,11 @@ Server yang digunakan memiliki deskripsi sebagai berikut :
         SELECT TABLE_NAME, TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'sakila' ORDER BY TABLE_ROWS DESC;
         ```
     * **Desc** digunakan untuk mengurutkan tabel dari yang memiliki data paling banyak.
+<<<<<<< HEAD
     * Jumlah baris data juga dapat dicari satu-satu dengan command **`SELECT COUNT(*) FROM nama_tabel;`** contoh:
+=======
+    * Jumlah baris data juga dapat dicari satu-satu dengan command `SELECT COUNT(*) FROM *nama tabel*;` contoh:
+>>>>>>> b342f1eeb3c57977dcada3a57f237718b0c36610
   
         ```mysql
         mysql> select count(*) from payment;
@@ -150,7 +157,11 @@ Implementasi partisi dilakukan dengan mengubah script skema SQL yang sudah ada d
         PARTITION BY HASH (payment_id) PARTITIONS 6;
     ```
     Keterangan:
+<<<<<<< HEAD
     * Pendefinisian **`Foreign Key`** dicomment/dihapus agar tidak dijalankan pada proses pembuatan partisi karena akan menyebabkan error.
+=======
+    * Pendefinisian `Foreign Key` dicomment/dihapus agar tidak dijalankan pada proses pembuatan partisi karena akan menyebabkan error.
+>>>>>>> b342f1eeb3c57977dcada3a57f237718b0c36610
     * Setelah meng-comment, jangan lupa menghapus tanda koma pada row sebelumnya.
 
 2. Menambah dan mengubah script SQL untuk membuat partisi tabel **Rental**.
@@ -182,10 +193,17 @@ Implementasi partisi dilakukan dengan mengubah script skema SQL yang sudah ada d
         );
     ```
     Keterangan:
+<<<<<<< HEAD
     * Pendefinisian **`Foreign Key`** dicomment/dihapus agar tidak dijalankan pada proses pembuatan partisi karena akan menyebabkan error.
     * Setelah meng-comment, jangan lupa menghapus tanda koma pada row sebelumnya.
     * Parameter partisi pada tabel Rental adalah **`rental_date`**, dimana **`rental_date`** bukanlah PRIMARY KEY. Maka **`rental_date`** ditambahkan menjadi PRIMARY KEY agar dapat disertakan pada masing-masing tabel partisi. Menambahkan pada baris **`PRIMARY KEY (rental_id, rental_date)`**.
     * Fungsi partisi untuk RANGE berdasarkan tanggal menggunakan perintah **`DAY()`**;
+=======
+    * Pendefinisian `Foreign Key` dicomment/dihapus agar tidak dijalankan pada proses pembuatan partisi karena akan menyebabkan error.
+    * Setelah meng-comment, jangan lupa menghapus tanda koma pada row sebelumnya.
+    * Parameter partisi pada tabel Rental adalah `rental_date`, dimana `rental_date` bukanlah PRIMARY KEY. Maka `rental_date` ditambahkan menjadi PRIMARY KEY agar dapat disertakan pada masing-masing tabel partisi. Menambahkan pada baris `PRIMARY KEY (rental_id, rental_date)`.
+    * Fungsi partisi untuk RANGE berdasarkan tanggal menggunakan perintah `DAY()`;
+>>>>>>> b342f1eeb3c57977dcada3a57f237718b0c36610
 
 3. Menjalankan ulang script skema SQL yang telah diubah dan diatur konfigurasi partisinya. 
    
@@ -211,12 +229,20 @@ Implementasi partisi dilakukan dengan mengubah script skema SQL yang sudah ada d
     
     Jika ada error, maka dicari tahu terlebih dahulu letak errornya dan diselesaikan.
 
+<<<<<<< HEAD
 4. Cek partisi yang sudah dibuat dengan command **`EXPLAIN SELECT * FROM nama_tabel\G`**
+=======
+4. Cek partisi yang sudah dibuat dengan command `EXPLAIN SELECT * FROM nama_tabel\G`
+>>>>>>> b342f1eeb3c57977dcada3a57f237718b0c36610
    
     ![Hasil Partisi](/Tugas-2/img/4.png)
 
 ### 2.3 Benchmarking
+<<<<<<< HEAD
 Untuk mengecek apakah proses partisi telah benar-benar berhasil, maka dilakukan proses pengujian yakni dengan cara memasukkan beberapa data baru (**`INSERT`**) dan menguji dengan query **`SELECT`** dari partisi tertentu.
+=======
+Untuk mengecek apakah proses partisi telah benar-benar berhasil, maka dilakukan proses pengujian yakni dengan cara memasukkan beberapa data baru (`INSERT`) dan menguji dengan query `SELECT` dari partisi tertentu.
+>>>>>>> b342f1eeb3c57977dcada3a57f237718b0c36610
 
 #### 2.3.1 Tabel Payment
 1. Memasukkan beberapa data baru (minimal 10 data) pada masing-masing tabel. Karena partisi tabel Payment terdiri atas 6 bagian, maka total jumlah data baru yang diinsert ada 60 data. Data bisa dimasukkan melalui terminal/tools SQL (MySQL Workbench, DBeaver, atau semacamnya).
@@ -292,7 +318,11 @@ Untuk mengecek apakah proses partisi telah benar-benar berhasil, maka dilakukan 
     Keterangan:
     * Data tidak ditulis secara spesifik akan masuk ke tabel mana karena **payment_id** merupakan kolom yang auto increment sehingga tidak perlu didefinisikan secara manual ketika INSERT
 
+<<<<<<< HEAD
 2. Melakukan pengujian menggunakan query SELECT dengan kasus untuk mencari data dengan **payment_id = 43**, dimana **`43 mod 6 = 1`** sehingga data seharusnya disimpan pada partisi **_p<sub>1</sub>_**.
+=======
+2. Melakukan pengujian menggunakan query SELECT dengan kasus untuk mencari data dengan **payment_id = 43**, dimana `43 mod 6 = 1` sehingga data seharusnya disimpan pada partisi **_p<sub>1</sub>_**.
+>>>>>>> b342f1eeb3c57977dcada3a57f237718b0c36610
    * Menjalankan query SELECT data dengan payment_id = 43 dari partisi yang benar.
   
         ```mysql
@@ -366,7 +396,11 @@ Untuk mengecek apakah proses partisi telah benar-benar berhasil, maka dilakukan 
     ('2005-05-30 19:12:42',4502,506,'2005-06-01 23:10:42',1,'2006-02-15 21:30:53'),
     ('2005-05-31 19:13:25',749,455,'2005-05-29 20:17:25',1,'2006-02-15 21:30:53');
     ````
+<<<<<<< HEAD
 2. Melakukan pengujian menggunakan query SELECT dengan kasus untuk mencari data dengan **rental_date tanggal 19**, dimana tanggal 19 seharusnya tersimpan pada partisi **`day_from_11_to_20`**.
+=======
+2. Melakukan pengujian menggunakan query SELECT dengan kasus untuk mencari data dengan **rental_date tanggal 19**, dimana tanggal 19 seharusnya tersimpan pada partisi `day_from_11_to_20`.
+>>>>>>> b342f1eeb3c57977dcada3a57f237718b0c36610
    * Menjalankan query SELECT data dengan rental_date = 19 dari partisi yang benar.
   
         ```mysql
@@ -495,7 +529,11 @@ Ada 2 jenis benchmark, yakni SELECT Queries Benchmark dan Big Delete Benchmark, 
 
 #### 3.3.2 Big Delete Benchmark
 ##### Langkah-Langkah
+<<<<<<< HEAD
 1. Sebelum melakukan big delete benchmark, **index** pada **`measure_timestamp`** harus ditambahkan kembali terlebih dahulu.
+=======
+1. Sebelum melakukan big delete benchmark, **index** pada `measure_timestamp` harus ditambahkan kembali terlebih dahulu.
+>>>>>>> b342f1eeb3c57977dcada3a57f237718b0c36610
    
     ```mysql
     ALTER TABLE vertabelo.measures

@@ -1,0 +1,71 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+
+  config.vm.define "proxy" do |proxy|
+    proxy.vm.hostname = "proxy"
+    proxy.vm.box = "bento/ubuntu-16.04"
+    proxy.vm.network "private_network", ip: "192.168.33.10"
+    proxy.vm.network "public_network", bridge: "Qualcomm Atheros QCA9377 Wireless Network Adapter"
+    
+    proxy.vm.provider "virtualbox" do |vb|
+      vb.name = "proxy"
+      vb.gui = false
+      vb.memory = "1024"
+    end
+
+    proxy.vm.provision "shell", path: "deployProxySQL.sh", privileged: false
+  end
+
+
+  config.vm.define "node1" do |node1|
+    node1.vm.hostname = "node1"
+    node1.vm.box = "bento/ubuntu-16.04"
+    node1.vm.network "private_network", ip: "192.168.33.11"
+    node1.vm.network "public_network", bridge: "Qualcomm Atheros QCA9377 Wireless Network Adapter"
+    
+    node1.vm.provider "virtualbox" do |vb|
+      vb.name = "node1"
+      vb.gui = false
+      vb.memory = "1024"
+    end
+
+    node1.vm.provision "shell", path: "deployMySQL11.sh", privileged: false
+  end
+
+  config.vm.define "node2" do |node2|
+    node2.vm.hostname = "node2"
+    node2.vm.box = "bento/ubuntu-16.04"
+    node2.vm.network "private_network", ip: "192.168.33.12"
+    node2.vm.network "public_network", bridge: "Qualcomm Atheros QCA9377 Wireless Network Adapter"
+    
+    node2.vm.provider "virtualbox" do |vb|
+      vb.name = "node2"
+      vb.gui = false
+      vb.memory = "1024"
+    end
+
+    node2.vm.provision "shell", path: "deployMySQL12.sh", privileged: false
+  end
+
+  config.vm.define "node3" do |node3|
+    node3.vm.hostname = "node3"
+    node3.vm.box = "bento/ubuntu-16.04"
+    node3.vm.network "private_network", ip: "192.168.33.13"
+    node3.vm.network "public_network", bridge: "Qualcomm Atheros QCA9377 Wireless Network Adapter"
+    
+    node3.vm.provider "virtualbox" do |vb|
+      vb.name = "node3"
+      vb.gui = false
+      vb.memory = "1024"
+    end
+
+    node3.vm.provision "shell", path: "deployMySQL13.sh", privileged: false
+  end
+
+end

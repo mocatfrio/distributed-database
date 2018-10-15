@@ -13,3 +13,4 @@ Dokumentasi Mata Kuliah Basis Data Terdistribusi 2018
 
 ## Tugas Individu
 2. Tugas 2 : [Implementasi Partisi Basis Data](/Tugas-2) 
+3. Tugas 3 : [Implementasi Parallel DBMS](/Tugas-3)

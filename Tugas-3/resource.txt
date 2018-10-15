@@ -1,0 +1,4 @@
+https://www.percona.com/blog/2016/08/30/mysql-sharding-with-proxysql/
+https://dev.mysql.com/doc/index-other.html
+https://severalnines.com/resources/tutorials/proxysql-tutorial-mysql-mariadb
+https://www.digitalocean.com/community/tutorials/how-to-use-proxysql-as-a-load-balancer-for-mysql-on-ubuntu-16-04

@@ -15,7 +15,7 @@
       <div class="col-12">
         <div class="text-right">
           <a href="/book/add" class="btn btn-info">
-            <i class="fa fa-plus mr-2 mb-10"></i> Tambah Tim
+            <i class="fa fa-plus mr-2 mb-10"></i> Add New Book
           </a>
         </div>
       </div>
@@ -24,28 +24,38 @@
       <table class="table table-bordered table-striped table-hover">
         <thead>
           <tr>
-            <th class="text-center" style="width: 5%">No</th>
-            <th class="text-center" style="width: 25%">Judul Buku</th>
-            <th class="text-center" style="width: 10%">ISBN</th>
-            <th class="text-center" style="width: 15%">Pengarang</th>		
-            <th class="text-center" style="width: 15%">Penerbit</th>				
-            <th class="text-center" style="width: 10%">Jumlah Halaman</th>				
-            <th class="text-center" style="width: 10%">Tahun Terbit</th>
-            <th class="text-center" style="width: 10%">Aksi</th>
+            <th class="text-center align-middle" style="width: 5%">No.</th>
+            <th class="text-center align-middle" style="width: 20%">Title</th>
+            <th class="text-center align-middle" style="width: 15%">ISBN</th>
+            <th class="text-center align-middle" style="width: 15%">Author</th>		
+            <th class="text-center align-middle" style="width: 15%">Publisher</th>				
+            <th class="text-center align-middle" style="width: 10%">Number of Pages</th>				
+            <th class="text-center align-middle" style="width: 10%">Published Year</th>
+            <th class="text-center align-middle" style="width: 10%" colspan="2">Action</th>
           </tr>
         </thead>
         <tbody>
-          <% for(var i=1 ; i <= book.length; i++) {%>
+          <% var i=1 %>
+          <% if (res) { %>
+          <% res.forEach(function(book){ %>
             <tr>
-              <td><%= i %></td>
+              <td class="text-center"><%= i %><% i++ %></td>
               <td><%= book.bookTitle %></td>
               <td><%= book.isbn %></td>
               <td><%= book.bookAuthor %></td>
               <td><%= book.bookPublisher %></td>
               <td><%= book.totalPages %></td>
-              <td><%= book.year %></td>
-              <td></td>
+              <td><%= book.year.getFullYear() %></td>
+              <td>
+                <a href='/book/edit/<%= book._id %>' class="btn btn-primary"><i class="far fa-edit small"></i></a> 
+              </td>
+              <td>
+                <form method="post" action="/book/delete/<%= book._id %>">
+                  <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt small"></i></button>
+                </form>
+              </td>
             </tr>
+          <% }) %>
           <% } %>
         </tbody>
       </table>

@@ -13,30 +13,30 @@
     </div>
     <div class="row justify-content-center">
       <div class="col-8">
-        <form action="/book" method="POST" name="form1">
+        <form action="/book/edit/<%= res._id %>" method="POST">
           <div class="form-group">
             <label for="book-title">Title</label>
-            <input type="text" class="form-control" id="book-title" placeholder="Enter the book's title" name="bookTitle">
+            <input type="text" class="form-control" id="book-title" value="<%= res.bookTitle %>" name="bookTitle">
           </div>
           <div class="form-group">
             <label for="isbn">ISBN</label>
-            <input type="text" class="form-control" id="isbn" placeholder="Enter the book's ISBN number" name="isbn">
+            <input type="text" class="form-control" id="isbn" value="<%= res.isbn %>" name="isbn">
           </div>
           <div class="form-group">
             <label for="book-author">Author</label>
-            <input type="text" class="form-control" id="book-author" placeholder="Enter the book's author" name="bookAuthor">
+            <input type="text" class="form-control" id="book-author" value="<%= res.bookAuthor %>" name="bookAuthor">
           </div>
           <div class="form-group">
             <label for="book-publisher">Publisher</label>
-            <input type="text" class="form-control" id="book-publisher" placeholder="Enter the book's publisher" name="bookPublisher">
+            <input type="text" class="form-control" id="book-publisher" value="<%= res.bookPublisher %>" name="bookPublisher">
           </div>
           <div class="form-group">
             <label for="total-pages">Number of Pages</label>
-            <input type="text" class="form-control" id="total-pages" placeholder="Enter the book's total pages" name="totalPages">
+            <input type="text" class="form-control" id="total-pages" value="<%= res.totalPages %>" name="totalPages">
           </div>
           <div class="form-group">
             <label for="year">Published Year</label>
-            <input type="text" class="form-control" id="year" placeholder="Enter the book's published year" name="year">
+            <input type="text" class="form-control" id="year" value="<%= res.year.getFullYear() %>" name="year">
           </div>
           <button type="submit" class="btn btn-info">Submit</button>
         </form>

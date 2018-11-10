@@ -1,5 +1,4 @@
 const express = require('express');
-const request = require('request');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const path = require('path');
@@ -33,14 +32,14 @@ app.use('/vendor',express.static(path.join(__dirname, 'public/vendor')));
 
 // Routes
 app.get('/', bookController.home);
-app.get('/book/add', bookController.addBook);
 app.route("/book")
   .get(bookController.listAllBooks)
   .post(bookController.createNewBook);
-app.route("/book/:bookid")
+app.get('/book/add', bookController.addBook);
+app.route("/book/edit/:bookid")
   .get(bookController.readBook)
-  .put(bookController.updateBook)
-  .delete(bookController.deleteBook);
+  .post(bookController.updateBook);
+app.post('/book/delete/:bookid', bookController.deleteBook);
 
 http.listen(port, () => {
   console.log('Server is up and running on port ' + port)

@@ -8,7 +8,7 @@ exports.home = (req, res) => {
   });
 };
 
-exports.listAllBooks = (req, res) => {
+exports.listAllBooks = (req, res, next) => {
   book.find({}, (err, book) => {
     if (err) {
       res.status(500).send(err);
@@ -16,8 +16,8 @@ exports.listAllBooks = (req, res) => {
     // res.status(200).json(book);
     res.render('book/list-book', { 
       title: 'Bookaholic | Book List', 
-      judul: 'My Book List',
-      book: book
+      judul: 'My Books',
+      res: book
     });
   });
 };
@@ -26,7 +26,7 @@ exports.listAllBooks = (req, res) => {
 exports.addBook = (req, res) => {
   res.render('book/add-book', {
     title: 'Bookaholic | Add Book',
-    judul: 'Add Book'
+    judul: 'Add New Book'
   })
 }
 
@@ -48,13 +48,18 @@ exports.createNewBook = (req, res) =>{
   });
 };
 
-// Read
+// Read for edit
 exports.readBook = (req, res) => {
   book.findById(req.params.bookid, (err, book) => {
     if (err) {
       res.status(500).send(err);
     }
-    res.status(200).json(book);
+    // res.status(200).json(book);
+    res.render('book/edit-book', { 
+      title: 'Bookaholic | Edit Book', 
+      judul: 'Edit Book',
+      res: book
+    });
   });
 };
 
@@ -71,16 +76,23 @@ exports.updateBook = (req, res) => {
       if (err) {
         res.status(500).send(err);
       }
-      res.status(200).json(book);
+      // res.status(200).json(book);
+      res.redirect('/book');
     }
   );
 };
 
 exports.deleteBook = (req, res) => {
-  book.remove({ _id: req.params.bookid }, (err, book) => {
+  book.remove(
+    { 
+      _id: req.params.bookid 
+    }, 
+    (err, book) => {
     if (err) {
       res.status(404).send(err);
     }
-    res.status(200).json({ message: "Task successfully deleted!" });
+    // res.status(200).json({ message: "Task successfully deleted!" });
+    console.log('Book successfully deleted!');
+    res.redirect('/book');
   });
 };

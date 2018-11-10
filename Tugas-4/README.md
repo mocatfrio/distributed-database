@@ -1,4 +1,4 @@
-# Membuat Aplikasi Web Aplikasi CRUD dengan Node.js dan MongoDB Atlas
+# Membuat Aplikasi Web CRUD menggunakan Node.js dan MongoDB Atlas
 
 ## Cara deploy
 

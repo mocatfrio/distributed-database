@@ -1,16 +1,35 @@
 // define models
 const book = require('../models/book');
 
+exports.home = (req, res) => {
+  res.render('index.ejs', { 
+    title: "Bookaholic | Home",
+    judul: "Holla, Bookaholic!"
+  });
+};
+
 exports.listAllBooks = (req, res) => {
   book.find({}, (err, book) => {
     if (err) {
       res.status(500).send(err);
     }
-    res.status(200).json(book);
+    // res.status(200).json(book);
+    res.render('book/list-book', { 
+      title: 'Bookaholic | Book List', 
+      judul: 'My Book List',
+      book: book
+    });
   });
 };
 
 // Create
+exports.addBook = (req, res) => {
+  res.render('book/add-book', {
+    title: 'Bookaholic | Add Book',
+    judul: 'Add Book'
+  })
+}
+
 exports.createNewBook = (req, res) =>{
   let newBook = new book({
     bookTitle: req.body.bookTitle,
@@ -24,7 +43,8 @@ exports.createNewBook = (req, res) =>{
     if (err) {
       res.status(500).send(err);
     }
-    res.status(201).json(book);
+    console.log('New book saved to database!');
+    res.redirect('/book');
   });
 };
 

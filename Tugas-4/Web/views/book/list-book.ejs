@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include ../components/head %>
+</head>
+<body>
+  <header>
+    <% include ../components/navbar %>
+  </header>
+  <main role="main" class="container container-custom">
+    <div class="jumbotron">
+      <h2 class="text-center"><%= judul %></h2>
+    </div>
+    <div class="row mb-20">
+      <div class="col-12">
+        <div class="text-right">
+          <a href="/book/add" class="btn btn-info">
+            <i class="fa fa-plus mr-2 mb-10"></i> Tambah Tim
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-hover">
+        <thead>
+          <tr>
+            <th class="text-center" style="width: 5%">No</th>
+            <th class="text-center" style="width: 25%">Judul Buku</th>
+            <th class="text-center" style="width: 10%">ISBN</th>
+            <th class="text-center" style="width: 15%">Pengarang</th>		
+            <th class="text-center" style="width: 15%">Penerbit</th>				
+            <th class="text-center" style="width: 10%">Jumlah Halaman</th>				
+            <th class="text-center" style="width: 10%">Tahun Terbit</th>
+            <th class="text-center" style="width: 10%">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(var i=1 ; i <= book.length; i++) {%>
+            <tr>
+              <td><%= i %></td>
+              <td><%= book.bookTitle %></td>
+              <td><%= book.isbn %></td>
+              <td><%= book.bookAuthor %></td>
+              <td><%= book.bookPublisher %></td>
+              <td><%= book.totalPages %></td>
+              <td><%= book.year %></td>
+              <td></td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </main>
+  <% include ../components/footer %>
+</body>
+</html>

@@ -83,7 +83,7 @@ exports.updateBook = (req, res) => {
 };
 
 exports.deleteBook = (req, res) => {
-  book.remove(
+  book.deleteOne(
     { 
       _id: req.params.bookid 
     }, 

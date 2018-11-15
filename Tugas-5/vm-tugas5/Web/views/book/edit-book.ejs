@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include ../components/head %>
+</head>
+<body>
+  <header>
+    <% include ../components/navbar %>
+  </header>
+  <main role="main" class="container container-custom">
+    <div class="jumbotron">
+      <h2 class="text-center"><%= judul %></h2>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-8">
+        <form action="/book/edit/<%= res._id %>" method="POST">
+          <div class="form-group">
+            <label for="book-title">Title</label>
+            <input type="text" class="form-control" id="book-title" value="<%= res.bookTitle %>" name="bookTitle">
+          </div>
+          <div class="form-group">
+            <label for="isbn">ISBN</label>
+            <input type="text" class="form-control" id="isbn" value="<%= res.isbn %>" name="isbn">
+          </div>
+          <div class="form-group">
+            <label for="book-author">Author</label>
+            <input type="text" class="form-control" id="book-author" value="<%= res.bookAuthor %>" name="bookAuthor">
+          </div>
+          <div class="form-group">
+            <label for="book-publisher">Publisher</label>
+            <input type="text" class="form-control" id="book-publisher" value="<%= res.bookPublisher %>" name="bookPublisher">
+          </div>
+          <div class="form-group">
+            <label for="total-pages">Number of Pages</label>
+            <input type="text" class="form-control" id="total-pages" value="<%= res.totalPages %>" name="totalPages">
+          </div>
+          <div class="form-group">
+            <label for="year">Published Year</label>
+            <input type="text" class="form-control" id="year" value="<%= res.year.getFullYear() %>" name="year">
+          </div>
+          <button type="submit" class="btn btn-info">Submit</button>
+        </form>
+      </div>
+    </div>
+  </main>
+  <% include ../components/footer %>
+</body>
+</html>

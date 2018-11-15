@@ -1,0 +1,11 @@
+MongoDB Cluster Installation
+https://websiteforstudents.com/install-mongodb-on-ubuntu-16-04-lts-servers/
+https://medium.com/@ratulbasak93/mongodb-relication-in-ubuntu-16-04-acd5baf744a3
+
+
+MongoDB driver installation
+https://websiteforstudents.com/install-mongodb-with-apache2-php-7-2-support-on-ubuntu-16-04-17-10-18-04/
+
+
+Laravel MongoDB
+https://appdividend.com/2018/05/10/laravel-mongodb-crud-tutorial-with-example/

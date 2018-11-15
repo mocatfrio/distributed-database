@@ -1,0 +1,63 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+
+Vagrant.configure("2") do |config|
+  config.vm.define "db_manager" do |db_manager|
+    db_manager.vm.hostname = "db-manager"
+    db_manager.vm.box = "bento/ubuntu-16.04"
+    db_manager.vm.network "private_network", ip: "192.168.33.10"
+    db_manager.vm.network "public_network", bridge: "eth0"
+    
+    db_manager.vm.provider "virtualbox" do |vb|
+      vb.name = "db-manager"
+      vb.gui = false
+      vb.memory = "512"
+    end
+
+    db_manager.vm.synced_folder "Web/", "/var/www/project",
+      id: "vagrant-root",
+      owner: "vagrant",
+      group: "www-data",
+      mount_options: ["dmode=775,fmode=664"]
+
+    db_manager.vm.provision "shell", path: "provision/allhosts.sh", privileged: false
+    db_manager.vm.provision "shell", path: "provision/nodejs.sh", privileged: false
+  end
+
+  config.vm.define "db_node1" do |db_node1|
+    db_node1.vm.hostname = "db-node1"
+    db_node1.vm.box = "bento/ubuntu-16.04"
+    db_node1.vm.network "private_network", ip: "192.168.33.11"
+    db_node1.vm.network "public_network", bridge: "eth0"
+    
+    db_node1.vm.provider "virtualbox" do |vb|
+      vb.name = "db-node1"
+      vb.gui = false
+      vb.memory = "512"
+    end
+
+    db_node1.vm.provision "shell", path: "provision/allhosts.sh", privileged: false
+  end
+
+  config.vm.define "db_node2" do |db_node2|
+    db_node2.vm.hostname = "db-node2"
+    db_node2.vm.box = "bento/ubuntu-16.04"
+    db_node2.vm.network "private_network", ip: "192.168.33.12"
+    db_node2.vm.network "public_network", bridge: "eth0"
+    
+    db_node2.vm.provider "virtualbox" do |vb|
+      vb.name = "db-node2"
+      vb.gui = false
+      vb.memory = "512"
+    end
+
+    db_node2.vm.provision "shell", path: "provision/allhosts.sh", privileged: false
+  end
+
+
+end

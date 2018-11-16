@@ -1,5 +1,5 @@
 # Declare host
-sudo bash -c \\"echo '192.168.33.10 db-master' >> /etc/hosts\\"
+sudo bash -c \\"echo '192.168.33.10 db-manager' >> /etc/hosts\\"
 sudo bash -c \\"echo '192.168.33.11 db-node1' >> /etc/hosts\\"
 sudo bash -c \\"echo '192.168.33.12 db-node2' >> /etc/hosts\\"
 
@@ -18,3 +18,6 @@ sudo apt-get install -y mongodb-org
 # Step 5: Enable MongoDB service
 sudo systemctl enable mongod    
 sudo systemctl start mongod
+# Step 6: Copy mongod.conf
+sudo bash -c \\"sudo cp /var/www/project/src/mongod.conf /etc/mongod.conf\\"
+sudo systemctl restart mongod

@@ -25,8 +25,8 @@ https://github.com/mocatfrio/bdt-2018/tree/master/Tugas-2
                 - [Langkah-Langkah](#langkah-langkah)
                 - [Hasil](#hasil)
             - [3.3.2 Big Delete Benchmark](#332-big-delete-benchmark)
-                - [Langkah-Langkah](#langkah-langkah)
-                - [Hasil](#hasil)
+                - [Langkah-Langkah](#langkah-langkah-1)
+                - [Hasil](#hasil-1)
         - [3.4 Kesimpulan](#34-kesimpulan)
     - [Referensi](#referensi)
 

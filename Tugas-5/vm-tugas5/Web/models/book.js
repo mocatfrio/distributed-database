@@ -2,28 +2,28 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 
 const bookSchema = new schema({
-  bookTitle: {
+  title: {
     type: String,
-    required: true
-  },
-  bookAuthor: {
-    type: String,
-    required: true
-  },
-  bookPublisher: {
-    type: String,
-    required: true
-  },
-  totalPages: {
-    type: Number,
     required: true
   },
   isbn: {
     type: String,
     required: true
   },
-  year: {
+  pageCount: {
+    type: Number,
+    required: true
+  },
+  authors: {
+    type: String
+    // required: true
+  },
+  publishedDate: {
     type: Date,
+    required: true
+  },
+  longDescription: {
+    type: String,
     required: true
   },
   createdOn: {

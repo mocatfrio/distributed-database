@@ -13,6 +13,7 @@ exports.listAllBooks = (req, res, next) => {
     if (err) {
       res.status(500).send(err);
     }
+    console.log(book);
     // res.status(200).json(book);
     res.render('book/list-book', { 
       title: 'Bookaholic | Book List', 
@@ -32,12 +33,12 @@ exports.addBook = (req, res) => {
 
 exports.createNewBook = (req, res) =>{
   var newBook = new book({
-    bookTitle: req.body.bookTitle,
-    bookAuthor: req.body.bookAuthor,
-    bookPublisher: req.body.bookPublisher,
-    totalPages: req.body.totalPages,
+    title: req.body.title,
     isbn: req.body.isbn,
-    year: req.body.year
+    pageCount: req.body.pageCount,
+    // authors: req.body.authors,
+    publishedDate: req.body.publishedDate,
+    longDescription: req.body.longDescription
   });
   newBook.save((err, book) => {
     if (err) {

@@ -16,27 +16,27 @@
         <form action="/book" method="POST" name="form1">
           <div class="form-group">
             <label for="book-title">Title</label>
-            <input type="text" class="form-control" id="book-title" placeholder="Enter the book's title" name="bookTitle">
+            <input type="text" class="form-control" id="book-title" placeholder="Enter the book's title" name="title">
           </div>
           <div class="form-group">
             <label for="isbn">ISBN</label>
-            <input type="text" class="form-control" id="isbn" placeholder="Enter the book's ISBN number" name="isbn">
+            <input type="text" class="form-control" id="isbn"  placeholder="Enter the book's ISBN number" name="isbn">
           </div>
           <div class="form-group">
+            <label for="total-pages">Total Pages</label>
+            <input type="text" class="form-control" id="total-pages" placeholder="Enter the book's total pages" name="pageCount">
+          </div>
+          <!-- <div class="form-group">
             <label for="book-author">Author</label>
-            <input type="text" class="form-control" id="book-author" placeholder="Enter the book's author" name="bookAuthor">
-          </div>
-          <div class="form-group">
-            <label for="book-publisher">Publisher</label>
-            <input type="text" class="form-control" id="book-publisher" placeholder="Enter the book's publisher" name="bookPublisher">
-          </div>
-          <div class="form-group">
-            <label for="total-pages">Number of Pages</label>
-            <input type="text" class="form-control" id="total-pages" placeholder="Enter the book's total pages" name="totalPages">
-          </div>
+            <input type="text" class="form-control" id="book-author" placeholder="Enter the book's author" name="authors">
+          </div> -->
           <div class="form-group">
             <label for="year">Published Year</label>
-            <input type="text" class="form-control" id="year" placeholder="Enter the book's published year" name="year">
+            <input type="text" class="form-control" id="year" placeholder="Enter the book's published date" name="publishedDate">
+          </div>
+          <div class="form-group">
+            <label for="longDescription">Description</label>
+            <textarea type="text" class="form-control" id="longDescription" placeholder="Enter the book's description" name="longDescription" rows="10"></textarea>
           </div>
           <button type="submit" class="btn btn-info">Submit</button>
         </form>

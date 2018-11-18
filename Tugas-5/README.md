@@ -48,7 +48,7 @@ Sistem ini diimplementasikan dengan lingkungan virtual, yakni menggunakan teknol
 * Sistem Operasi : Ubuntu 16.04
 * Aplikasi yang diinstall :
   * MongoDB : mongodb-org (Sebagai database. Diinstall di semua node)
-  * Node.js : nodejs (Sebagai web server. Diinstall hanya di node master) 
+  * Node.js : nodejs (Diinstall hanya di node master) 
   * NPM : npm (Sebagai Package Manager untuk Node.js. Diinstall hanya di node master)
   * PM2 : pm2 (Sebagai Process Manager untuk Node.js. Diinstall hanya di node master)
 

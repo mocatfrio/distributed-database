@@ -494,5 +494,5 @@ Dapat dilihat di:
       ![Cek jumlah data](img/fig18.png)
 
 ## 5. Referensi
-* [MongoDB Cluster Installation](https://medium.com/@ratulbasak93/mongodb-relication-in-ubuntu-16-04-acd5baf744a3)
-* [Building CRUD App with NodeJS and MongoDB](https://codeburst.io/writing-a-crud-app-with-node-js-and-mongodb-e0827cbbdafb)
+* https://medium.com/@ratulbasak93/mongodb-relication-in-ubuntu-16-04-acd5baf744a3
+* https://codeburst.io/writing-a-crud-app-with-node-js-and-mongodb-e0827cbbdafb

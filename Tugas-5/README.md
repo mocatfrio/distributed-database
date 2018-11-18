@@ -61,7 +61,7 @@ Sistem ini diimplementasikan dengan lingkungan virtual, yakni menggunakan teknol
 * Saya memilih Node.js karena Node.js sangat sering disandingkan dengan MongoDB.
 
 ### 2.4 Dataset
-* Dataset yang digunakan adalah Dataset Katalog Buku yang berisi 481 data. 
+* Dataset yang digunakan adalah Dataset Katalog Buku yang berisi 431 data. 
 * Dataset diunduh di https://github.com/ozlerhakan/mongodb-json-files/blob/master/datasets/catalog.books.json dengan sedikit modifikasi pada bagian **"_id"**. Semua **"_id"** nya dihapus karena ada sebagian data yang tidak menggunakan **$oid** (object id).
 
 ## 3. Implementasi Sistem

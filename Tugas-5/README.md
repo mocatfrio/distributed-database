@@ -1,7 +1,6 @@
 ### Basis Data Terdistribusi
 # Aplikasi Web CRUD menggunakan Node.js, MongoDB, dan Vagrant Virtual Box
-Oleh: **Hafara Firdausi (05111540000043)**
-https://github.com/mocatfrio/bdt-2018/tree/master/Tugas-5
+Oleh: **Hafara Firdausi (05111540000043)** - https://github.com/mocatfrio/bdt-2018/tree/master/Tugas-5
 
 ## Outline
 - [Aplikasi Web CRUD menggunakan Node.js, MongoDB, dan Vagrant Virtual Box](#aplikasi-web-crud-menggunakan-nodejs-mongodb-dan-vagrant-virtual-box)
@@ -135,13 +134,7 @@ Struktur folder Vagrant yang telah dimodifikasi:
         └── index.ejs
 ```
 1. **Vagrantfile**
-   Modifikasi:
-    * **bridge** pada `db_manager.vm.network "public_network", bridge: "eth0"` disesuaikan dengan host.
-    * **vb.memory** disesuaikan dengan kondisi host supaya tidak lambat.
-    * Menambahkan **vm.synced_folder** untuk mensinkronkan folder aplikasi web CRUD NodeJS yang telah dibuat.
-    * Menambahkan `db_manager.vm.provision "shell", path: "provision/nodejs.sh", privileged: false` untuk menambahkan provisioning (persiapan) NodeJS khusus pada node **db_manager**.
-    * Menambahkan **vm.synced_folder** pada kedua node secondary (**db_node1** dan **db_node2**)
-  
+
     ```ruby
     # -*- mode: ruby -*-
     # vi: set ft=ruby :
@@ -218,8 +211,18 @@ Struktur folder Vagrant yang telah dimodifikasi:
 
     end
     ```
+
+    Modifikasi:
+      * **bridge** pada `db_manager.vm.network "public_network", bridge: "eth0"` disesuaikan dengan host.
+      * **vb.memory** disesuaikan dengan kondisi host supaya tidak lambat.
+      * Menambahkan **vm.synced_folder** untuk mensinkronkan folder aplikasi web CRUD NodeJS yang telah dibuat.
+      * Menambahkan `db_manager.vm.provision "shell", path: "provision/nodejs.sh", privileged: false` untuk menambahkan provisioning (persiapan) NodeJS khusus pada node **db_manager**.
+      * Menambahkan **vm.synced_folder** pada kedua node secondary (**db_node1** dan **db_node2**)
+
 2. **allhosts.sh**
-   Disesuaikan dengan kebutuhan.
+  
+    Disesuaikan dengan kebutuhan.
+    
     ```bash
     # Declare host
     sudo bash -c \\"echo '192.168.33.10 db-manager' >> /etc/hosts\\"
@@ -252,7 +255,9 @@ Struktur folder Vagrant yang telah dimodifikasi:
     sudo systemctl restart mongod
     ```
 3. **nodejs.sh**
-   Membuat sendiri sesuai kebutuhan.
+   
+    Membuat sendiri sesuai kebutuhan.
+   
     ```bash
     # Install NodeJS
 
@@ -273,9 +278,6 @@ Struktur folder Vagrant yang telah dimodifikasi:
     pm2 start /var/www/project/app.js
     ``` 
 4. **mongod.conf**
-    Modifikasi:
-    * **bindIp** diganti menjadi 0.0.0.0 supaya tidak tetap default 127.0.0.1
-    * **replication:** diuncomment dan **replSetName** ditambahkan untuk memberikan nama replika set
 
     ```bash
     # mongod.conf
@@ -304,10 +306,15 @@ Struktur folder Vagrant yang telah dimodifikasi:
     replication:
       replSetName: rs0
     ```
+
+    Modifikasi:
+      * **bindIp** diganti menjadi 0.0.0.0 supaya tidak tetap default 127.0.0.1
+      * **replication:** diuncomment dan **replSetName** ditambahkan untuk memberikan nama replika set
+  
 ### 3.3 Aplikasi Web CRUD NodeJS
 
 Dapat dilihat di:
-[Aplikasi Web CRUD Katalog Buku menggunakan NodeJS](vm-tugas5/Web)
+[Aplikasi Web CRUD Katalog Buku menggunakan NodeJS](vm-tugas5/Web) (Github)
 
 ### 3.4 Menjalankan Vagrant
 1. Setelah memodifikasi script, maka jalankan vagrant virtual box
@@ -406,12 +413,14 @@ Dapat dilihat di:
         ```
     4. Tes replika set.
         1. Pada **db_manager**
+  
             ```mongo
             $ mongo
             rs0:PRIMARY> use exampleDB
             rs0:PRIMARY> for (var i = 0; i <= 10; i++) db.exampleCollection.insert( { x : i } )
             ```
         2. Pada **db_node1** dan **db_node2**
+            
             ```mongo
             $ mongo
             rs0:SECONDARY> rs.slaveOk()
@@ -486,4 +495,4 @@ Dapat dilihat di:
 
 ## 5. Referensi
 * [MongoDB Cluster Installation](https://medium.com/@ratulbasak93/mongodb-relication-in-ubuntu-16-04-acd5baf744a3)
-* [CRUD App with NodeJS and MongoDB](https://codeburst.io/writing-a-crud-app-with-node-js-and-mongodb-e0827cbbdafb)
+* [Building CRUD App with NodeJS and MongoDB](https://codeburst.io/writing-a-crud-app-with-node-js-and-mongodb-e0827cbbdafb)

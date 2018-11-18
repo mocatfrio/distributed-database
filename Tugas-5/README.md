@@ -10,8 +10,8 @@ https://github.com/mocatfrio/bdt-2018/tree/master/Tugas-5
   - [2. Deskripsi Sistem](#2-deskripsi-sistem)
     - [2.1 Arsitektur Sistem](#21-arsitektur-sistem)
     - [2.2 MongoDB](#22-mongodb)
-    - [2.2 Node.js](#22-nodejs)
-    - [2.2 Dataset](#22-dataset)
+    - [2.3 Node.js](#23-nodejs)
+    - [2.4 Dataset](#24-dataset)
   - [3. Implementasi Sistem](#3-implementasi-sistem)
     - [3.1 Persiapan](#31-persiapan)
     - [3.2 Modifikasi Script](#32-modifikasi-script)
@@ -57,11 +57,11 @@ Sistem ini diimplementasikan dengan lingkungan virtual, yakni menggunakan teknol
 * MongoDB adalah sebuah database dokumen yang open-source dan merupakan salah satu database NoSQL. 
 * MongoDB memiliki fitur replikasi, yakni proses sinkronisasi data di beberapa server, yang disebut **ReplicaSet**. ReplicaSet adalah sekelompok/cluster server database MongoDB yang mengimplementasikan replikasi master-slave (primer-sekunder). 
 
-### 2.2 Node.js
+### 2.3 Node.js
 * Node.js adalah perangkat lunak yang didesain untuk mengembangkan aplikasi berbasis web dan ditulis dalam sintaks bahasa pemrograman JavaScript. 
 * Saya memilih Node.js karena Node.js sangat sering disandingkan dengan MongoDB.
 
-### 2.2 Dataset
+### 2.4 Dataset
 * Dataset yang digunakan adalah Dataset Katalog Buku yang berisi 481 data. 
 * Dataset diunduh di https://github.com/ozlerhakan/mongodb-json-files/blob/master/datasets/catalog.books.json dengan sedikit modifikasi pada bagian **"_id"**. Semua **"_id"** nya dihapus karena ada sebagian data yang tidak menggunakan **$oid** (object id).
 

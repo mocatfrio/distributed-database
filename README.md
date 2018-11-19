@@ -5,7 +5,7 @@ Dokumentasi Mata Kuliah Basis Data Terdistribusi 2018
 1. Tugas 2 : [Implementasi Partisi Basis Data](/Tugas-2) 
 2. Tugas 3 : [Vertical Splitting](/Tugas-3) 
 3. Tugas ETS : [Implementasi Parallel DBMS](/Tugas-ETS)
-4. Tugas 4 : [Membuat Aplikasi Web CRUD menggunakan Node.js dan MongoDB Atlas](/Tugas-4)
+4. Tugas 4 : Membuat Aplikasi Web CRUD menggunakan Node.js dan MongoDB Atlas
 5. Tugas 5 : [Membuat Aplikasi Web CRUD menggunakan Node.js, MongoDB, dan Vagrant](/Tugas-5)
 
 ## Kelompok

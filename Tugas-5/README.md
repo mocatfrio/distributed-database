@@ -14,8 +14,7 @@ Oleh: **Hafara Firdausi (05111540000043)** - https://github.com/mocatfrio/bdt-20
   - [3. Implementasi Sistem](#3-implementasi-sistem)
     - [3.1 Persiapan](#31-persiapan)
     - [3.2 Modifikasi Script](#32-modifikasi-script)
-    - [3.3 Aplikasi Web CRUD NodeJS](#33-aplikasi-web-crud-nodejs)
-    - [3.4 Menjalankan Vagrant](#34-menjalankan-vagrant)
+    - [3.3 Menjalankan Vagrant](#33-menjalankan-vagrant)
   - [4. Final Testing](#4-final-testing)
   - [5. Referensi](#5-referensi)
 
@@ -310,13 +309,8 @@ Struktur folder Vagrant yang telah dimodifikasi:
     Modifikasi:
       * **bindIp** diganti menjadi 0.0.0.0 supaya tidak tetap default 127.0.0.1
       * **replication:** diuncomment dan **replSetName** ditambahkan untuk memberikan nama replika set
-  
-### 3.3 Aplikasi Web CRUD NodeJS
 
-Dapat dilihat di:
-[Aplikasi Web CRUD Katalog Buku menggunakan NodeJS](vm-tugas5/Web) (Github)
-
-### 3.4 Menjalankan Vagrant
+### 3.3 Menjalankan Vagrant
 1. Setelah memodifikasi script, maka jalankan vagrant virtual box
    
     ```bash

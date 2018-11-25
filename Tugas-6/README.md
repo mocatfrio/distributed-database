@@ -270,7 +270,7 @@ Sebelum mengimport dataset, kita harus membuat **KEYSPACE** dan **TABLE** terleb
 ### 3.6 Membuat Aplikasi Web CRUD Flask
 Ketika kita sedang mengembangkan sebuah aplikasi Python, lebih baik menggunakan **Virtualenv** supaya tidak mempengaruhi environment global.
 
-> Keterangan : Pastikan kalian sudah menginstall Python, Pip, dan Virtualenv
+> Keterangan : Pastikan sudah menginstall Python, Pip, dan Virtualenv
 
 1. Membuat dan berpindah ke direktori project **flask-crud-app**
    ```bash
@@ -341,7 +341,7 @@ Keterangan:
     * Debugger PIN: 962-976-676
     ```
     
-    Alangkah baiknya untuk mengaktifkan **DEBUG** seperti diatas, saat sedang mengembangkan aplikasi
+    Alangkah baiknya untuk mengaktifkan **DEBUG** seperti diatas ketika sedang mengembangkan aplikasi
 * **requirements.txt** : File yang menyimpan semua library Python yang dibutuhkan untuk diinstall. Jika ingin menginstall hanya perlu menggunakan command:
     ```bash
     pip install -r requirements.txt
@@ -482,7 +482,7 @@ Keterangan:
   
       ![Tes Create](img/ss3.png)
 
-    * Isi form sesuai dengan keinginan. Klik tombol "Submit"
+    * Isi form sesuai dengan keinginan, kemudian klik tombol **Submit**
 
       ![Tes Create](img/ss4.png)
 
@@ -495,7 +495,7 @@ Keterangan:
     ![Cek jumlah data](img/ss2.png)
 
 5. Tes Update (Mengubah data)
-    * Klik tombol **Edit** (icon pensil) pada tabel **Action** di samping data yang ingin diubah. Pada kasus ini, saya mengubah nama
+    * Klik tombol **Edit** (icon pensil) pada tabel **Action** di samping data yang ingin diubah. Pada kasus ini, saya mengubah nama. Kemudian klik tombol **Submit**
    
       ![Cek jumlah data](img/ss6.png)
 

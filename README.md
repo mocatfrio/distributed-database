@@ -8,6 +8,7 @@ Dokumentasi Mata Kuliah Basis Data Terdistribusi 2018
 4. Tugas 4 : Aplikasi Web CRUD menggunakan Node.js dan MongoDB Atlas
 5. Tugas 5 : [Aplikasi Web CRUD menggunakan Node.js, MongoDB, dan Vagrant](/Tugas-5)
 5. Tugas 6 : [Aplikasi Web CRUD menggunakan Flask dan Apache Cassandra](/Tugas-6)
+5. Tugas EAS : [Aplikasi Web CRUD menggunakan Flask, Redis, dan MySQL Cluster](/Tugas-EAS)
 
 ## Kelompok
 1. 5115100043 - Hafara Firdausi​

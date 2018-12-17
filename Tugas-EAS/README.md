@@ -32,7 +32,6 @@ Oleh: **Hafara Firdausi (05111540000043)** - https://github.com/mocatfrio/bdt-20
   - [4. Pengujian](#4-pengujian)
     - [4.1 Pengujian MySQL Cluster](#41-pengujian-mysql-cluster)
       - [4.1.1 Pengujian Koneksi](#411-pengujian-koneksi)
-      - [4.1.2 Pengujian Replikasi dan High Availibility](#412-pengujian-replikasi-dan-high-availibility)
     - [4.2 Pengujian Redis Sentinel Cluster](#42-pengujian-redis-sentinel-cluster)
       - [4.2.1 Pengujian Koneksi](#421-pengujian-koneksi)
       - [4.2.2 Pengujian Replikasi dan High Availibility](#422-pengujian-replikasi-dan-high-availibility)
@@ -54,7 +53,7 @@ Oleh: **Hafara Firdausi (05111540000043)** - https://github.com/mocatfrio/bdt-20
 ### 2.1 Arsitektur Sistem
 ![Arsitektur](img/arsitektur.png)
 
-Arsitektur sistem diatas diimplementasikan dengan teknologi virtualisasi menggunakan **Vagrant** dan **Virtual Box**, terdiri dari 7 node virtual, 3 node Redis Sentinel Cluster, 1 node LoadBalancer MySQL, dan 3 node MySQL Group Replication.
+Arsitektur sistem diatas diimplementasikan dengan teknologi virtualisasi menggunakan **Vagrant** dan **Virtual Box**, terdiri dari 7 node virtual; 3 node Redis Sentinel Cluster, 1 node LoadBalancer MySQL, dan 3 node MySQL Group Replication.
 
 ### 2.2 Deskripsi Host Utama
 Host utama juga berperan sebagai Web Application (Client)
@@ -601,8 +600,6 @@ n.b. Tutorial selengkapnya dapat dilihat di bagian referensi
   
     ![Tes Koneksi 2](img/ss3.png)  
 
-#### 4.1.2 Pengujian Replikasi dan High Availibility
-
 ### 4.2 Pengujian Redis Sentinel Cluster
 #### 4.2.1 Pengujian Koneksi
 
@@ -665,20 +662,72 @@ n.b. Tutorial selengkapnya dapat dilihat di bagian referensi
     ```
 2. Ketik di browser `localhost:8991` 
 
-3. Autentikasi (Ada 2 role, yaknis sebagai Admin dan User
+    ![Web](img/web1.png)  
+
+3. Autentikasi (Ada 2 role, yaknis sebagai Admin dan User)
+    
+    ![Web](img/web2.png)  
+    
+4. Daftar akun
+
+    ![Web](img/web3.png)  
+   
 4. Fitur Admin - Menambahkan data buku dan kategori buku (Create)
+   
+    ![Web](img/web9.png)  
+
+    ![Web](img/web10.png)  
+
+    n.b. Ini sebenarnya fitur add, namun ada kesalah pada template html
+   
 5. Fitur Admin - Melihat data buku dan kategori buku (Read)
+
+    ![Web](img/web5.png)  
+   
 6. Fitur Admin - Mengedit data buku dan kategori buku (Update)
+   
+    ![Web](img/web11.png)  
+
+    ![Web](img/web12.png)  
+
 7. Fitur Admin - Menghapus data buku dan kategori buku (Delete)
+
+    ![Web](img/web13.png) 
+
 8. Fitur User - Melihat data buku (diurutkan berdasarkan rating tertinggi)
-9. Fitur User - Melihat detail buku
-10. Fitur User - Filter
-11. Fitur User - Search
+
+    ![Web](img/web4.png)     
+   
+9.  Fitur User - Melihat detail buku
+   
+    ![Web](img/web6.png)  
+
+10. Fitur User - Filter (query backend)
+
+    ![Web](img/web14.png)  
+    
+11. Fitur User - Search (datatable)
+
+    ![Web](img/web15.png)  
+
 
 ### 4.4 Pengujian Load Testing
-Pengujian load testing dilakukan menggunakan **JMeter**. Tujuan dari pengujian ini adalah untuk membandingkan waktu akses halaman yang di-cache menggunakan Redis dengan yang tidak di-cache.
-
-Hasilnya ada di dalam File Excel.
+* Pengujian load testing dilakukan menggunakan **JMeter**.
+* Tujuan dari pengujian ini adalah untuk membandingkan waktu akses halaman yang di-cache menggunakan Redis dengan yang tidak di-cache. 
+* Halaman yang diuji hanya halaman GET, yakni:
+  * Halaman dashboard buku (meng-query 10000 data)
+  * Halaman home (hanya file front-end)
+  * Halaman detail buku 
+* Masing-masing halaman yang akan diuji, dibuatkan route dengan cache dan tanpa cache.
+* Variable yang divariasikan:
+  * Jumlah user 10
+  * Jumlah user 100
+  * Jumlah user 1000
+* Berikut adalah hasilnya
+  * [summary10.csv](/test_jmeter/summary10.csv)
+  * [summary100.csv](/test_jmeter/summary100.csv)
+  * [summary1000.csv](/test_jmeter/summary1000.csv)
+* Analisis: 
 
 ## 5. Referensi
 * [Build a CRUD Web App With Python and Flask](https://scotch.io/tutorials/build-a-crud-web-app-with-python-and-flask-part-one)

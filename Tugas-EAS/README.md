@@ -724,12 +724,13 @@ n.b. Tutorial selengkapnya dapat dilihat di bagian referensi
   * Jumlah user 100
   * Jumlah user 1000
 * Berikut adalah hasilnya
-  * [summary10.csv](/test_jmeter/summary10.csv)
-  * [summary100.csv](/test_jmeter/summary100.csv)
-  * [summary1000.csv](/test_jmeter/summary1000.csv)
-* Analisis: 
+  * [summary10.csv](test_jmeter/summary10.csv)
+  * [summary100.csv](test_jmeter/summary100.csv)
+  * [summary1000.csv](test_jmeter/summary1000.csv)
+* Analisis:
+  * Dari hasil
 
 ## 5. Referensi
 * [Build a CRUD Web App With Python and Flask](https://scotch.io/tutorials/build-a-crud-web-app-with-python-and-flask-part-one)
 * [Setting Redis Sentinel](https://medium.com/@amila922/redis-sentinel-high-availability-everything-you-need-to-know-from-dev-to-prod-complete-guide-deb198e70ea6)
-* [Flask-SQLAlchemy Configuration](http://flask-sqlalchemy.pocoo.org/2.1/config/)
+* [Flask-SQLAlchemy Configuration](http://flask-sqlalchemy.pocoo.org/2.1/config/)   

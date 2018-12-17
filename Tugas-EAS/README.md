@@ -3,7 +3,7 @@
 Oleh: **Hafara Firdausi (05111540000043)** - https://github.com/mocatfrio/bdt-2018/tree/master/Tugas-EAS
 
 ## Outline
-- [Aplikasi Web CRUD menggunakan Flask, Redis Sentinel, dan MySQL Group Replication](#aplikasi-web-crud-menggunakan-flask-redis-sentinel-dan-mysql-group-replication)
+ - [Aplikasi Web CRUD menggunakan Flask, Redis Sentinel, dan MySQL Group Replication](#aplikasi-web-crud-menggunakan-flask-redis-sentinel-dan-mysql-group-replication)
   - [Outline](#outline)
   - [1. Deskripsi Tugas](#1-deskripsi-tugas)
   - [2. Deskripsi Sistem](#2-deskripsi-sistem)
@@ -13,8 +13,8 @@ Oleh: **Hafara Firdausi (05111540000043)** - https://github.com/mocatfrio/bdt-20
       - [2.3.1 ProxySQL Server sebagai Load Balancer MySQL](#231-proxysql-server-sebagai-load-balancer-mysql)
       - [2.3.2 MySQL Group Replication Server sebagai Database](#232-mysql-group-replication-server-sebagai-database)
       - [2.3.3 Redis Sentinel Cluster sebagai Cache Data](#233-redis-sentinel-cluster-sebagai-cache-data)
-    - [2.3 Deskripsi Dataset](#23-deskripsi-dataset)
-    - [2.4 Deskripsi Web](#24-deskripsi-web)
+    - [2.4 Deskripsi Dataset](#24-deskripsi-dataset)
+    - [2.5 Deskripsi Web](#25-deskripsi-web)
   - [3. Implementasi Sistem](#3-implementasi-sistem)
     - [3.1 Menyiapkan Vagrant](#31-menyiapkan-vagrant)
       - [3.1.1 Script Vagrant MySQL Cluster](#311-script-vagrant-mysql-cluster)
@@ -95,7 +95,7 @@ Host utama juga berperan sebagai Web Application (Client)
   * **redis2** : 192.168.33.15
   * **redis3** : 192.168.33.16
 
-### 2.3 Deskripsi Dataset
+### 2.4 Deskripsi Dataset
 * Dataset yang digunakan adalah Dataset GoodBooks 10K (dapat diunduh di https://www.kaggle.com/zygmunt/goodbooks-10k#books.csv) 
 * Dataset berisi 10000 baris data
 * Dataset memiliki 23 kolom atribut
@@ -112,7 +112,7 @@ Host utama juga berperan sebagai Web Application (Client)
     * **ratingsTotal** : Total rating
     * **image_url** : Thumbnail buku
 
-### 2.4 Deskripsi Web
+### 2.5 Deskripsi Web
 * Web dibuat menggunakan **Flask**, yakni kerangka kerja (framework) aplikasi web mikro yang ditulis dalam bahasa pemrograman Python
 * Web dikembangkan menggunakan **Virtualenv** Python 2.7
 * Web menggunakan beberapa library Python yang dibutuhkan, antara lain:
@@ -727,8 +727,14 @@ n.b. Tutorial selengkapnya dapat dilihat di bagian referensi
   * [summary10.csv](test_jmeter/summary10.csv)
   * [summary100.csv](test_jmeter/summary100.csv)
   * [summary1000.csv](test_jmeter/summary1000.csv)
+
+    Keterangan:
+    * **xxx_redis** adalah route halaman yang dicache oleh Redis
+    * **xxx** adalah route halaman yang tidak dicache
 * Analisis:
-  * Dari hasil
+  * **Dashboard** adalah halaman yang meng-query dan menampilkan semua data dari MySQL. Waktu akses halaman **dashboard_redis** selalu lebih cepat dibandingkan dengan **dashboard**. Namun, yang memiliki perbedaan waktu paling besar adalah pada user 10 yaitu 99 - 51 = **48ms**; sedangkan pada user 100 perbedaan waktunya hanya 65 - 63 = **2ms**, dan pada user 1000 perbedaan waktunya hanya 49 - 46 = **3ms**. Hal ini disebabkan karena memori yang diberikan pada VM Redis hanya sedikit, yaitu 256 MB, padahal Redis adalah penyimpanan data **in-memory**.
+  * **Home** adalah halaman utama yang hanya menampilkan tampilan front-end. Waktu akses **home_redis** dan **home** tidak terlihat jelas perbedaannya, bahkan hampir sama.
+  * **Detail** adalah halaman yang menampilkan detail buku berdasarkan ID. Namun, waktu akses **detail_redis** lebih lama dibandingkan dengan waktu akses **detail**. 
 
 ## 5. Referensi
 * [Build a CRUD Web App With Python and Flask](https://scotch.io/tutorials/build-a-crud-web-app-with-python-and-flask-part-one)
